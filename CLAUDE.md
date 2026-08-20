@@ -8,13 +8,13 @@ A benchmark comparing two Bisaya ASR systems on the same corpus:
 
 1. A **Kaldi HMM-GMM model trained from scratch** — a 2-gram, 3-state,
    speaker-adaptive-trained (SAT) HMM-GMM using the PS27 27-phoneme set,
-   reproducing the best-performing Bisaya configuration from Ing (2023),
-   *Filipino and Bisaya ASR System using TDNN-HMM towards application in a
-   healthcare chatbot* (De La Salle University master's thesis; full text
-   and the derived implementation blueprint are in `references/`). Every
-   neural (DNN/TDNN) variant that thesis tested for Bisaya scored equal to
-   or worse than this HMM-GMM configuration, which is why there is no
-   TDNN/DNN stage here.
+   reproducing the best-performing Bisaya configuration from Ing (2023) --
+   see README.md's Citation section for the full reference. Every neural
+   (DNN/TDNN) variant that this work tested for Bisaya scored equal to or worse
+   than this HMM-GMM configuration, which is why there is no TDNN/DNN
+   stage here. `references/` (if present) is a local, git-ignored copy of
+   source material for personal use only -- it is not part of this repo
+   and must never be committed or redistributed.
 2. **ElevenLabs Scribe**, a commercial ASR API, evaluated zero-shot on the
    same corpus for comparison.
 

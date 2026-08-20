@@ -7,14 +7,11 @@ speech corpus.
 ## Background
 
 The Kaldi model reproduces the best-performing Bisaya configuration from
-Ing (2023), *Filipino and Bisaya ASR System using TDNN-HMM towards
-application in a healthcare chatbot* (De La Salle University master's
-thesis) — a 2-gram, 3-state, speaker-adaptive-trained (SAT) HMM-GMM model
-using the PS27 27-phoneme set. Every neural (DNN/TDNN) variant that thesis
-tested for Bisaya scored equal to or worse than this HMM-GMM
-configuration, which is why there's no TDNN/DNN stage here. The thesis
-text and the implementation blueprint derived from it are in
-[`references/`](references/).
+Ing (2023) — a 2-gram, 3-state, speaker-adaptive-trained (SAT) HMM-GMM
+model using the PS27 27-phoneme set. Every neural (DNN/TDNN) variant that
+this work tested for Bisaya scored equal to or worse than this HMM-GMM
+configuration, which is why there's no TDNN/DNN stage here. See
+[Citation](#citation) below.
 
 ## Dataset
 
@@ -51,7 +48,7 @@ output/                    # generated results (gitignored)
   kaldi/results.csv        # Kaldi's raw per-utterance results
   elevenlabs/results.csv   # ElevenLabs' raw per-utterance results
 models/tri3/                # curated, decode-ready Kaldi model (gitignored)
-references/                 # thesis text + derived implementation blueprint
+references/                 # local copy of source material, gitignored -- not redistributed (see Citation)
 CLAUDE.md                   # detailed technical/environment notes
 ```
 
@@ -131,15 +128,27 @@ Windows Python — no Kaldi installation needed there, since decoding
   treat `compare.ipynb`'s output as a qualitative read, not a
   statistically powered comparison.
 - **Rule-based lexicon.** The PS27 grapheme-to-phoneme mapping used for
-  Kaldi's lexicon is a hand-written approximation, not the thesis's own
+  Kaldi's lexicon is a hand-written approximation, not a
   transcriber-produced dictionary.
 - **Not a fully matched comparison.** ElevenLabs is a zero-shot
   pretrained model; Kaldi is trained specifically on this corpus. The
   paired comparison in `compare.ipynb` controls for *which* utterances
   are compared, not for this fundamental difference in how each system
   was built.
-- Expect a WER gap against the thesis's own reported 5.41% figure — this
-  corpus is smaller and structured differently from the thesis's own.
+- Expect a WER gap against Ing (2023)'s own reported 5.41% figure for
+  this configuration — this corpus is smaller and structured differently.
 
 See `CLAUDE.md` for detailed environment/build notes (Kaldi-on-WSL
 gotchas, exact stage-by-stage pipeline architecture).
+
+## Citation
+
+The Kaldi model configuration and PS27 phoneme set reproduced here are
+from:
+
+> Ing, J. A. (2023). *Filipino and Bisaya Speech Corpus and Baseline
+> Acoustic Models for Healthcare Chatbot ASR*.
+> https://www.researchgate.net/publication/374139254_Filipino_and_Bisaya_Speech_Corpus_and_Baseline_Acoustic_Models_for_Healthcare_Chatbot_ASR
+
+The source text is not redistributed in this repository — `references/`
+is a local, git-ignored copy for personal use only.
