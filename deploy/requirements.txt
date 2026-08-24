@@ -1,0 +1,6 @@
+gradio
+
+# Only needed once models/whisper-bisaya/ has a real fine-tuned checkpoint
+# (see deployment.md, "Deploying Whisper"):
+# transformers
+# torch

@@ -5,3 +5,5 @@ output/
 models/
 references/
 .ipynb_checkpoints/
+
+deploy/kaldi_work/
