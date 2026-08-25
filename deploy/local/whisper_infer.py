@@ -1,9 +1,9 @@
 """Whisper transcription -- loads the fine-tuned checkpoint
-fine-tune-whisper-kaggle.ipynb pushes to the Hugging Face Hub, the same
-model evaluate_whisper.ipynb evaluates. Set BISAYA_WHISPER_MODEL_ID to a
-local directory instead if you have a manually exported checkpoint --
-transformers' pipeline() accepts a Hub repo id or a local path
-transparently, so no code change is needed either way.
+fine-tune-whisper-kaggle.ipynb pushes to the Hugging Face Hub. Set
+BISAYA_WHISPER_MODEL_ID to a local directory instead if you have a
+manually exported checkpoint -- transformers' pipeline() accepts a Hub
+repo id or a local path transparently, so no code change is needed
+either way.
 """
 
 import os

@@ -20,7 +20,7 @@ def _q(path):
     # (e.g. ".../Sugbodoc/speech model/...") -- always quote for the shell.
     return shlex.quote(str(path))
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 MODEL_DIR = Path(os.environ.get("BISAYA_KALDI_MODEL_DIR", PROJECT_ROOT / "models" / "tri3")).resolve()
 KALDI_ROOT = Path(os.environ.get("KALDI_ROOT", Path.home() / "kaldi")).resolve()
 # WSL-native by default (like train_kaldi.ipynb's WORK_DIR) -- old Kaldi shell
@@ -54,8 +54,8 @@ def _check_environment():
     if platform.system() != "Linux":
         raise RuntimeError(
             "Kaldi engine requires WSL2/Ubuntu or native Linux -- Kaldi doesn't "
-            "build on native Windows. Run app.py with the WSL Python, not the "
-            "Windows one (see deployment.md)."
+            "build on native Windows. Run local_app.py with the WSL Python, not "
+            "the Windows one (see deploy/README.md)."
         )
     if not (KALDI_ROOT / "src" / "featbin" / "compute-mfcc-feats").exists():
         raise RuntimeError(

@@ -206,26 +206,47 @@ wired into the two-system benchmark's WER/CER comparison).
 
 ## Deployment demo (`deploy/`)
 
-A small standalone Gradio UI for trying the ASR systems interactively --
+Two standalone Gradio UIs for trying the ASR systems interactively --
 separate from the benchmark notebooks above, not for computing WER/CER
-(see `deploy/deployment.md` for full setup/run instructions).
+(see `deploy/README.md` for full setup/run instructions). Split into two
+apps because they target different audiences and environments:
 
 ```
 deploy/
-  app.py             # Gradio UI: upload/record audio, transcribe with both engines at once
-  kaldi_infer.py      # live Kaldi decode for one audio file (needs WSL2/Ubuntu)
-  whisper_infer.py    # Whisper inference -- loads the fine-tuned checkpoint from the Hugging Face Hub
-  deployment.md
+  README.md
+  .env.example
+  local/
+    local_app.py         # all three engines, checklist to pick any combination
+    kaldi_infer.py         # live Kaldi decode for one audio file (needs WSL2/Ubuntu)
+    whisper_infer.py       # Whisper inference (Hugging Face Hub checkpoint)
+    elevenlabs_infer.py    # ElevenLabs Scribe API call
+    requirements.txt
+  prod/
+    prod_app.py           # Whisper only, self-contained, cloud-ready
+    requirements.txt
 ```
 
-`app.py` has no engine picker -- this is an experiment comparing the two
-systems, not a product picking one, so every request runs both and shows
-both transcripts side by side; an engine that isn't usable in the current
-environment reports why in its own output box instead of blocking the
-other. `whisper_infer.py` loads `troxyz1268/whisper-small-bisaya` (the
-checkpoint `fine-tune-whisper-kaggle.ipynb` pushes to the Hub, the same
-one `evaluate_whisper.ipynb` evaluates) by default -- override
-`BISAYA_WHISPER_MODEL_ID` for a different Hub repo or a local export. The
-Kaldi engine decodes live (unlike `evaluate_kaldi.ipynb`, which only
-scores already-decoded output), so it needs the same WSL2/Ubuntu +
-`KALDI_ROOT` environment as `train_kaldi.ipynb`.
+- **`local_app.py`** -- for advanced users with the full local
+  environment set up (WSL2/Ubuntu + built Kaldi checkout + exported
+  `models/tri3/` for Kaldi, an `ELEVENLABS_API_KEY` for ElevenLabs).
+  Model selection is a `gr.CheckboxGroup` (Kaldi/ElevenLabs/Whisper, all
+  checked by default) -- transcript boxes are shown/hidden to match
+  exactly what's checked, since this is an experiment comparing systems,
+  not a product that picks one. Each engine's failure is caught and
+  shown in its own output box rather than blocking the others; an
+  ElevenLabs 401/429 (out of API credits) is specifically caught as
+  `elevenlabs_infer.QuotaExceededError` and surfaced as a prominent
+  warning banner across the top instead of a generic per-box error.
+- **`prod_app.py`** -- Whisper-only, no engine picker, meant for
+  lightweight cloud hosting (Hugging Face Spaces, Streamlit Community
+  Cloud). Kaldi is omitted entirely: it needs a compiled Kaldi checkout
+  under WSL/C++, which standard cloud containers can't provide. Written
+  to be self-contained (no imports outside `deploy/prod/`) so the folder
+  can be pushed as its own deployment unit.
+
+Both load `troxyz1268/whisper-small-bisaya` (the checkpoint
+`fine-tune-whisper-kaggle.ipynb` pushes to the Hub) from the Hub by
+default via `BISAYA_WHISPER_MODEL_ID` -- override for a different Hub
+repo or a local export. Both read a `.env` from their own directory
+first, falling back to `deploy/.env` if present (see `deploy/.env.example`
+for the full variable list, and `deploy/README.md` for setup).

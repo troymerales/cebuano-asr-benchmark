@@ -49,8 +49,26 @@ output/                    # generated results (gitignored)
   elevenlabs/results.csv   # ElevenLabs' raw per-utterance results
 models/tri3/                # curated, decode-ready Kaldi model (gitignored)
 references/                 # local copy of source material, gitignored -- not redistributed (see Citation)
+deploy/                     # interactive demo apps, not part of the benchmark -- see below
 CLAUDE.md                   # detailed technical/environment notes
 ```
+
+## Interactive demo (`deploy/`)
+
+Separate from the notebooks above -- two Gradio apps for trying the
+systems interactively rather than computing WER/CER, split by audience
+and environment (see `deploy/README.md` for full setup):
+
+| | `deploy/local/local_app.py` | `deploy/prod/prod_app.py` |
+|---|---|---|
+| Systems | Kaldi + ElevenLabs + Whisper (checklist, any combination) | Whisper only |
+| Environment | **WSL2/Ubuntu**, built Kaldi checkout, `models/tri3/`, `ELEVENLABS_API_KEY` | Any lightweight cloud container (Hugging Face Spaces, Streamlit Community Cloud) or plain Python |
+| Audience | Advanced users with the full local setup | Public-facing showcase |
+
+`prod_app.py` drops Kaldi entirely -- it needs a compiled Kaldi checkout
+under WSL/C++, which standard cloud containers can't build -- and is
+self-contained so `deploy/prod/` can be pushed as its own deployment
+unit with no dependency on the rest of this repo.
 
 ## Workflow
 
