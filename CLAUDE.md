@@ -18,9 +18,12 @@ A benchmark comparing two Bisaya ASR systems on the same corpus:
 2. **ElevenLabs Scribe**, a commercial ASR API, evaluated zero-shot on the
    same corpus for comparison.
 
-There is no source package, build system, linter, or test suite — this is
-four Jupyter notebooks, each a runnable pipeline stage, validated
-empirically by the WER/CER printed at the end of a run.
+There is no source package, build system, linter, or test suite. The core
+benchmark is four Jupyter notebooks, each a runnable pipeline stage,
+validated empirically by the WER/CER printed at the end of a run (see
+"Notebook structure and dependency chain" below). Two more notebooks and
+a small deployment demo exist alongside it but are **not** part of that
+pipeline — see "Whisper fine-tuning" and "Deployment demo" further down.
 
 ## Notebook structure and dependency chain
 
@@ -144,3 +147,80 @@ models/
 
 Neither `results.csv` has `norm_*` columns — see "Normalization lives in
 exactly one place" above.
+
+## Whisper fine-tuning (standalone, not part of the benchmark)
+
+`fine_tune_whisper.ipynb` and `fine-tune-whisper-kaggle.ipynb` are **not**
+part of the `train_kaldi.ipynb` -> `compare.ipynb` pipeline above -- neither
+exports a `results.csv`, neither is read by `compare.ipynb`, and this is
+deliberate (a fine-tuned Whisper is an exploratory third system, not
+wired into the two-system benchmark's WER/CER comparison).
+
+- **`fine_tune_whisper.ipynb`** is the unmodified Hugging Face
+  ["Fine-Tune Whisper for Multilingual ASR"](https://huggingface.co/blog/fine-tune-whisper)
+  Colab tutorial (Hindi/Common Voice) -- kept only as an unmodified
+  reference. Never edit this file; adapt `fine-tune-whisper-kaggle.ipynb`
+  instead.
+- **`fine-tune-whisper-kaggle.ipynb`** is the real, actively-run notebook:
+  fine-tunes `openai/whisper-small` on this project's actual Bisaya
+  corpus, on Kaggle (GPU quota, Kaggle Secrets for `HF_TOKEN`, corpus
+  attached as a Kaggle Dataset -- see the notebook's own "Kaggle Setup"
+  section). Uses `language="tl"` (Tagalog) as Whisper's closest built-in
+  code -- there's no Cebuano/Bisaya token.
+
+**Kaggle-environment gotchas** (hard-won from real runs, apply to
+`fine-tune-whisper-kaggle.ipynb` specifically):
+- **Pin `datasets<4.0`.** 4.0+ made `torchcodec` a hard requirement for
+  decoding `Audio` columns, and torchcodec needs an FFmpeg build whose
+  shared libs (`libavutil.so.57-60`) aren't present on Kaggle's image --
+  `Could not load libtorchcodec` the moment any audio is touched.
+  `HF_DATASETS_DISABLE_TORCHCODEC=1` does **not** prevent this. `datasets
+  <4.0` (tested: 3.6.0) uses the classic soundfile-based decoder
+  (`{"array", "sampling_rate", "path"}` dict) instead.
+- **`.filter()`/`.map()` touch every column, not just the ones the
+  function uses**, unless you pass `input_columns=[...]`. Filtering by
+  `speaker_id` without `input_columns=["speaker_id"]` silently decodes
+  the entire `audio` column for every row just to determine batch size --
+  confirmed locally: ~21s vs ~0s for the identical filter on this corpus.
+- **`num_proc=1` is not "no multiprocessing."** It still routes through a
+  forked `multiprocess.Pool` in current `datasets` versions, which can
+  deadlock (or silently corrupt decoded `Audio` objects into `None`)
+  when combined with torchcodec's native ffmpeg-backed decoder. Omit
+  `num_proc` entirely for genuine single-process execution.
+- **Kaggle's preinstalled `torch`/`torchaudio`/`torchvision` can be
+  mismatched** (e.g. `torch==2.13.0` vs `torchaudio==2.10.0+cu128`).
+  `transformers` opportunistically imports both while building Whisper's
+  feature extractor/processor, and their CUDA-version checks crash on
+  the mismatch, taking down `from transformers import Whisper...`
+  entirely. `pip uninstall` on these is not reliable on Kaggle; instead
+  monkeypatch `transformers.utils.import_utils.is_torchaudio_available`
+  / `is_torchvision_available` to `False` before the first
+  `WhisperFeatureExtractor`/`WhisperProcessor` import (see that cell) --
+  this notebook needs neither package.
+- **Every utterance in this corpus exceeds Whisper's fixed 30-second
+  input window** (median ~120s, max ~300s). Truncating audio to 30s
+  while keeping the full transcript as the label breaks the audio/text
+  alignment for training. `prepare_dataset` instead uses the corpus's
+  word-level timestamps (`words`: list of `{text, start, end}`) to split
+  each utterance into <=28s chunks with correctly matched audio/text.
+
+## Deployment demo (`deploy/`)
+
+A small standalone Gradio UI for trying the two ASR systems interactively
+-- separate from the benchmark notebooks above, not for computing WER/CER
+(see `deploy/deployment.md` for full setup/run instructions).
+
+```
+deploy/
+  app.py             # Gradio UI: pick an engine, upload/record audio, transcribe
+  kaldi_infer.py      # live Kaldi decode for one audio file (needs WSL2/Ubuntu)
+  whisper_infer.py    # Whisper inference -- stub until models/whisper-bisaya/ exists
+  deployment.md
+```
+
+`whisper_infer.py` auto-activates once a real checkpoint (from
+`fine-tune-whisper-kaggle.ipynb`) is exported to `models/whisper-bisaya/`
+-- no code changes needed. The Kaldi engine decodes live (unlike
+`evaluate_kaldi.ipynb`, which only scores already-decoded output), so it
+needs the same WSL2/Ubuntu + `KALDI_ROOT` environment as
+`train_kaldi.ipynb`.
