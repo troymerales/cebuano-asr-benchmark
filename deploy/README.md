@@ -15,6 +15,7 @@ deploy/
   prod/
     prod_app.py        # Whisper only, self-contained, cloud-ready
     requirements.txt
+    README.md           # Hugging Face Spaces config (SDK, app file) -- see "Publishing" below
 ```
 
 Both are separate from the benchmark notebooks (`train_kaldi.ipynb`,
@@ -117,6 +118,46 @@ python prod_app.py
 Runs on CPU by default (no GPU logic here) -- fine for a free-tier
 showcase, just expect real per-request latency, especially cold-start on
 first use.
+
+## 3. Publishing `prod_app.py` to Hugging Face Spaces
+
+`deploy/prod/` is self-contained (`prod_app.py`, `requirements.txt`,
+`README.md`) specifically so it can be pushed as its own Space with no
+dependency on the rest of this repo.
+
+1. Create a Space at [huggingface.co/new-space](https://huggingface.co/new-space)
+   -- SDK: **Gradio**, Hardware: **CPU basic** (free), Visibility: **Public**.
+2. `deploy/prod/README.md` already has the required Spaces config
+   frontmatter (`sdk: gradio`, `app_file: prod_app.py`, etc.) -- no need
+   to write a new one.
+3. No secrets/variables needed for the default setup: `prod_app.py` falls
+   back to `troxyz1268/whisper-small-bisaya` when `BISAYA_WHISPER_MODEL_ID`
+   isn't set, and no `.env` file gets pushed (it's gitignored) -- it just
+   works. Only set `BISAYA_WHISPER_MODEL_ID` as a Space "Variable" (in its
+   Settings) if you want a different checkpoint.
+4. Push the three files in `deploy/prod/` to the Space:
+   - **Simplest (no git):** open the Space's "Files" tab in the browser
+     and upload `prod_app.py`, `requirements.txt`, and `README.md`
+     directly. HF auto-builds and deploys on upload.
+   - **Via git** (better for iterating later) -- do this from a *copy* of
+     `deploy/prod/`, not the folder itself, since it's nested inside this
+     repo's own git tracking and a second `.git` folder in there would be
+     confusing:
+     ```bash
+     cp -r deploy/prod /tmp/bisaya-asr-space
+     cd /tmp/bisaya-asr-space
+     git init
+     git add .
+     git commit -m "Initial prod deploy"
+     git remote add space https://huggingface.co/spaces/<your-username>/<space-name>
+     git push space main
+     ```
+5. Once it builds, the Space is live at
+   `https://huggingface.co/spaces/<your-username>/<space-name>` -- public,
+   independent of your machine being on. Free CPU-basic Spaces sleep after
+   a period of inactivity and take a moment to wake on the next visit, on
+   top of the model's own cold-start latency (see "Runs on CPU by
+   default" above).
 
 ## Notes
 
