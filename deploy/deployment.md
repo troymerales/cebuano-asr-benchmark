@@ -1,13 +1,15 @@
 # Deployment
 
 A small Gradio UI (`app.py`) for trying out the two ASR systems this project
-built: upload or record Bisaya speech, pick an engine, get a transcript.
+built: upload or record Bisaya speech, get a transcript from **both**
+engines side by side -- this is an experiment comparing them, not a product
+picking one, so there's no engine selector.
 
 ```
 deploy/
   app.py             # Gradio UI
   kaldi_infer.py      # live Kaldi decode for one audio file
-  whisper_infer.py    # Whisper inference -- stub until a checkpoint exists
+  whisper_infer.py    # Whisper inference -- loads the fine-tuned checkpoint from the Hugging Face Hub
   requirements.txt
 ```
 
@@ -65,31 +67,29 @@ score against, so `BISAYA_KALDI_LMWT` is a fixed value instead of the swept
 `--min-lmwt`/`--max-lmwt` range the eval notebook uses. If transcripts look
 off, try a different value (the eval notebook's sweep covers 1-25).
 
-## 2. Deploying Whisper (once it finishes)
+## 2. Deploying Whisper
 
-`fine_tune_whisper_kaggle.ipynb` is still training. Until then,
-`whisper_infer.py` always reports itself unavailable, but the "Whisper"
-option is already visible in the UI (selecting it shows the same message).
+`whisper_infer.py` loads `troxyz1268/whisper-small-bisaya` from the Hugging
+Face Hub by default -- the checkpoint `fine-tune-whisper-kaggle.ipynb`
+pushes there, the same one `evaluate_whisper.ipynb` evaluates. No manual
+export step needed; it downloads on first use (needs internet access and
+`pip install transformers torch`).
 
-**To activate it once training finishes:**
-
-1. Run `fine_tune_whisper_kaggle.ipynb` on Kaggle through to
-   `trainer.push_to_hub(**kwargs)` (or just `trainer.save_model(...)`).
-2. Export the checkpoint (`config.json`, model weights, tokenizer,
-   `preprocessor_config.json`) into `models/whisper-bisaya/` in this repo.
-3. `pip install transformers torch` (not needed until this point).
-4. Restart `app.py`.
-
-`whisper_infer.is_available()` checks for `models/whisper-bisaya/config.json`
-and flips the Whisper engine on automatically -- no code changes needed.
-Inference uses `language="tagalog"`, matching the language the fine-tuning
-notebook trains with (Whisper's closest built-in code to Bisaya/Cebuano;
-see that notebook's intro for the caveat).
+**To use a different or locally exported checkpoint instead:** set
+`BISAYA_WHISPER_MODEL_ID` to either another Hub repo id or a local
+directory path (e.g. `models/whisper-bisaya/`, if you exported one via the
+Kaggle notebook's "Export for local machine" section) -- `transformers`'
+`pipeline()` accepts both forms transparently, so no code changes are
+needed either way. Inference uses `language="tl"`, matching the language
+the fine-tuning notebook trains with (Whisper's closest built-in code to
+Bisaya/Cebuano; see that notebook's intro for the caveat).
 
 ## Notes
 
-- Both engines are exposed on the same page regardless of which environment
-  you're running in; an engine that isn't usable there (e.g. Kaldi on plain
-  Windows) reports why instead of crashing the app.
+- Both engines run on every request regardless of which environment you're
+  running in; an engine that isn't usable there (e.g. Kaldi on plain
+  Windows, or Whisper without internet access) reports why in its own
+  output box instead of crashing the app.
 - This UI is for manual spot-checks, not benchmarking -- for WER/CER, use
-  `evaluate_kaldi.ipynb` / `evaluate_elevenlabs.ipynb` / `compare.ipynb`.
+  `evaluate_kaldi.ipynb` / `evaluate_elevenlabs.ipynb` / `evaluate_whisper.ipynb`
+  / `compare.ipynb`.

@@ -206,21 +206,26 @@ wired into the two-system benchmark's WER/CER comparison).
 
 ## Deployment demo (`deploy/`)
 
-A small standalone Gradio UI for trying the two ASR systems interactively
--- separate from the benchmark notebooks above, not for computing WER/CER
+A small standalone Gradio UI for trying the ASR systems interactively --
+separate from the benchmark notebooks above, not for computing WER/CER
 (see `deploy/deployment.md` for full setup/run instructions).
 
 ```
 deploy/
-  app.py             # Gradio UI: pick an engine, upload/record audio, transcribe
+  app.py             # Gradio UI: upload/record audio, transcribe with both engines at once
   kaldi_infer.py      # live Kaldi decode for one audio file (needs WSL2/Ubuntu)
-  whisper_infer.py    # Whisper inference -- stub until models/whisper-bisaya/ exists
+  whisper_infer.py    # Whisper inference -- loads the fine-tuned checkpoint from the Hugging Face Hub
   deployment.md
 ```
 
-`whisper_infer.py` auto-activates once a real checkpoint (from
-`fine-tune-whisper-kaggle.ipynb`) is exported to `models/whisper-bisaya/`
--- no code changes needed. The Kaldi engine decodes live (unlike
-`evaluate_kaldi.ipynb`, which only scores already-decoded output), so it
-needs the same WSL2/Ubuntu + `KALDI_ROOT` environment as
-`train_kaldi.ipynb`.
+`app.py` has no engine picker -- this is an experiment comparing the two
+systems, not a product picking one, so every request runs both and shows
+both transcripts side by side; an engine that isn't usable in the current
+environment reports why in its own output box instead of blocking the
+other. `whisper_infer.py` loads `troxyz1268/whisper-small-bisaya` (the
+checkpoint `fine-tune-whisper-kaggle.ipynb` pushes to the Hub, the same
+one `evaluate_whisper.ipynb` evaluates) by default -- override
+`BISAYA_WHISPER_MODEL_ID` for a different Hub repo or a local export. The
+Kaldi engine decodes live (unlike `evaluate_kaldi.ipynb`, which only
+scores already-decoded output), so it needs the same WSL2/Ubuntu +
+`KALDI_ROOT` environment as `train_kaldi.ipynb`.
