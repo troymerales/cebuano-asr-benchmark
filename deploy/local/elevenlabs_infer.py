@@ -46,6 +46,22 @@ def _is_quota_error(e):
     return "quota" in message or "credit" in message or " 401" in message or " 429" in message
 
 
+def _extract_api_detail(e):
+    # ElevenLabs' ApiError carries the real reason in .body -- a 401 isn't
+    # always "out of credits" (e.g. it can also mean the account was
+    # flagged for "unusual activity" and Free Tier access was disabled,
+    # which has nothing to do with remaining quota). Surface that instead
+    # of guessing, so the banner tells the user what actually happened.
+    body = getattr(e, "body", None)
+    if isinstance(body, dict):
+        detail = body.get("detail")
+        if isinstance(detail, dict):
+            return detail.get("message") or detail.get("status")
+        if isinstance(detail, str):
+            return detail
+    return None
+
+
 def transcribe(audio_path):
     client = _get_client()
     try:
@@ -55,9 +71,12 @@ def transcribe(audio_path):
             )
     except Exception as e:
         if _is_quota_error(e):
-            raise QuotaExceededError(
+            detail = _extract_api_detail(e)
+            message = (
+                f"ElevenLabs transcription failed: {detail}" if detail else
                 "ElevenLabs transcription failed: Token quota exceeded. "
                 "Please check your API credits."
-            ) from e
+            )
+            raise QuotaExceededError(message) from e
         raise RuntimeError(f"ElevenLabs transcription failed: {e}") from e
     return result.text

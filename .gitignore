@@ -1,5 +1,3 @@
-.env
-
 data/
 output/
 models/
@@ -7,6 +5,7 @@ references/
 .ipynb_checkpoints/
 
 deploy/kaldi_work/
+deploy/local/envs
 
 __pycache__/
 *.pyc
