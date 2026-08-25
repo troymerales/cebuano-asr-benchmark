@@ -7,3 +7,6 @@ references/
 .ipynb_checkpoints/
 
 deploy/kaldi_work/
+
+__pycache__/
+*.pyc
