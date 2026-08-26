@@ -11,3 +11,5 @@ deploy/local/envs
 
 __pycache__/
 *.pyc
+
+CLAUDE.md
