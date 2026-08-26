@@ -1,0 +1,17 @@
+# lattice-depth-per-frame "ark:gunzip -c exp/tri3/decode_test.si/lat.3.gz|" "ark,t:|gzip -c > exp/tri3/decode_test.si/depth_tmp.3.gz" ark:- | lattice-best-path --acoustic-scale=0.1 ark:- ark:/dev/null "ark,t:|gzip -c >exp/tri3/decode_test.si/ali_tmp.3.gz" 
+# Started at Thu Aug 20 13:09:18 PST 2026
+#
+lattice-depth-per-frame 'ark:gunzip -c exp/tri3/decode_test.si/lat.3.gz|' 'ark,t:|gzip -c > exp/tri3/decode_test.si/depth_tmp.3.gz' ark:- 
+lattice-best-path --acoustic-scale=0.1 ark:- ark:/dev/null 'ark,t:|gzip -c >exp/tri3/decode_test.si/ali_tmp.3.gz' 
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:99) For utterance CEB_012-000007, best cost 1309.81 + 27521.3 = 28831.1 over 5642 frames.
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:99) For utterance CEB_012-000008, best cost 1001.52 + 18723.3 = 19724.8 over 3769 frames.
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:99) For utterance CEB_012-000009, best cost 2401.53 + 44800.4 = 47201.9 over 9561 frames.
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:99) For utterance CEB_012-000010, best cost 1162.57 + 23995.1 = 25157.6 over 4942 frames.
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:99) For utterance CEB_012-000011, best cost 1314.95 + 24024 = 25338.9 over 5131 frames.
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:99) For utterance CEB_012-000012, best cost 859.83 + 17016.8 = 17876.6 over 3362 frames.
+LOG (lattice-depth-per-frame[5.5.1182~1-e02e3]:main():lattice-depth-per-frame.cc:82) Done 7 lattices.
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:99) For utterance CEB_012-000013, best cost 991.717 + 18475.7 = 19467.5 over 3740 frames.
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:124) Overall cost per frame is 5.07922 = 0.250143 [graph] + 4.82907 [acoustic] over 36147 frames.
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:128) Done 7 lattices, failed for 0
+# Accounting: time=0 threads=1
+# Ended (code 0) at Thu Aug 20 13:09:18 PST 2026, elapsed time 0 seconds

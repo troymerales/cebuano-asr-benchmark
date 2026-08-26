@@ -1,0 +1,7 @@
+# compile-train-graphs --read-disambig-syms=/home/troxyz1268/bisaya_asr/data/lang/phones/disambig.int /home/troxyz1268/bisaya_asr/exp/tri3/tree /home/troxyz1268/bisaya_asr/exp/tri3/1.mdl /home/troxyz1268/bisaya_asr/data/lang/L.fst "ark:utils/sym2int.pl --map-oov 3 -f 2- /home/troxyz1268/bisaya_asr/data/lang/words.txt < /home/troxyz1268/bisaya_asr/data/train_sp/split8/3/text |" "ark:|gzip -c >/home/troxyz1268/bisaya_asr/exp/tri3/fsts.3.gz" 
+# Started at Thu Aug 20 11:42:52 PST 2026
+#
+compile-train-graphs --read-disambig-syms=/home/troxyz1268/bisaya_asr/data/lang/phones/disambig.int /home/troxyz1268/bisaya_asr/exp/tri3/tree /home/troxyz1268/bisaya_asr/exp/tri3/1.mdl /home/troxyz1268/bisaya_asr/data/lang/L.fst 'ark:utils/sym2int.pl --map-oov 3 -f 2- /home/troxyz1268/bisaya_asr/data/lang/words.txt < /home/troxyz1268/bisaya_asr/data/train_sp/split8/3/text |' 'ark:|gzip -c >/home/troxyz1268/bisaya_asr/exp/tri3/fsts.3.gz' 
+LOG (compile-train-graphs[5.5.1182~1-e02e3]:main():compile-train-graphs.cc:147) compile-train-graphs: succeeded for 24 graphs, failed for 0
+# Accounting: time=5 threads=1
+# Ended (code 0) at Thu Aug 20 11:42:57 PST 2026, elapsed time 5 seconds

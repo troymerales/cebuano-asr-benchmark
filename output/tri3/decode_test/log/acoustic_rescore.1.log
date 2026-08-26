@@ -1,0 +1,90 @@
+# gmm-rescore-lattice exp/tri3/final.mdl "ark:gunzip -c exp/tri3/decode_test/lat.tmp.1.gz|" "ark,s,cs:apply-cmvn  --utt2spk=ark:data/test/split3/1/utt2spk scp:data/test/split3/1/cmvn.scp scp:data/test/split3/1/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats exp/tri3/final.mat ark:- ark:- | transform-feats --utt2spk=ark:data/test/split3/1/utt2spk ark:exp/tri3/decode_test/trans.1 ark:- ark:- |" ark:- | lattice-determinize-pruned --acoustic-scale=0.083333 --beam=15 ark:- "ark:|gzip -c > exp/tri3/decode_test/lat.1.gz" && rm exp/tri3/decode_test/lat.tmp.1.gz 
+# Started at Thu Aug 20 13:55:21 PST 2026
+#
+gmm-rescore-lattice exp/tri3/final.mdl 'ark:gunzip -c exp/tri3/decode_test/lat.tmp.1.gz|' 'ark,s,cs:apply-cmvn  --utt2spk=ark:data/test/split3/1/utt2spk scp:data/test/split3/1/cmvn.scp scp:data/test/split3/1/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats exp/tri3/final.mat ark:- ark:- | transform-feats --utt2spk=ark:data/test/split3/1/utt2spk ark:exp/tri3/decode_test/trans.1 ark:- ark:- |' ark:- 
+lattice-determinize-pruned --acoustic-scale=0.083333 --beam=15 ark:- 'ark:|gzip -c > exp/tri3/decode_test/lat.1.gz' 
+apply-cmvn --utt2spk=ark:data/test/split3/1/utt2spk scp:data/test/split3/1/cmvn.scp scp:data/test/split3/1/feats.scp ark:- 
+transform-feats exp/tri3/final.mat ark:- ark:- 
+transform-feats --utt2spk=ark:data/test/split3/1/utt2spk ark:exp/tri3/decode_test/trans.1 ark:- ark:- 
+splice-feats ark:- ark:- 
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+WARNING (lattice-determinize-pruned[5.5.1182~1-e02e3]:CheckMemoryUsage():determinize-lattice-pruned.cc:316) Did not reach requested beam in determinize-lattice: size exceeds maximum 50000000 bytes; (repo,arcs,elems) = (42492480,36352,8996064), after rebuilding, repo size was 32968384, effective beam was 1.86097 vs. requested beam 15
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:DeterminizeLatticePruned():determinize-lattice-pruned.cc:1231) Pruned state-level lattice with beam 7.5 and retrying determinization with that beam.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (apply-cmvn[5.5.1182~1-e02e3]:main():apply-cmvn.cc:162) Applied cepstral mean normalization to 6 utterances, errors on 0
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+WARNING (lattice-determinize-pruned[5.5.1182~1-e02e3]:CheckMemoryUsage():determinize-lattice-pruned.cc:316) Did not reach requested beam in determinize-lattice: size exceeds maximum 50000000 bytes; (repo,arcs,elems) = (41975424,24096,9047808), after rebuilding, repo size was 34772704, effective beam was 0.531386 vs. requested beam 15
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:DeterminizeLatticePruned():determinize-lattice-pruned.cc:1231) Pruned state-level lattice with beam 7.5 and retrying determinization with that beam.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+WARNING (lattice-determinize-pruned[5.5.1182~1-e02e3]:CheckMemoryUsage():determinize-lattice-pruned.cc:316) Did not reach requested beam in determinize-lattice: size exceeds maximum 50000000 bytes; (repo,arcs,elems) = (42648096,20928,8914032), after rebuilding, repo size was 34516640, effective beam was 0.252165 vs. requested beam 15
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:DeterminizeLatticePruned():determinize-lattice-pruned.cc:1231) Pruned state-level lattice with beam 7.5 and retrying determinization with that beam.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:158) Overall average [pseudo-]logdet is -95.1545 over 180199 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:161) Applied transform to 6 utterances; 0 had errors.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+WARNING (lattice-determinize-pruned[5.5.1182~1-e02e3]:CheckMemoryUsage():determinize-lattice-pruned.cc:316) Did not reach requested beam in determinize-lattice: size exceeds maximum 50000000 bytes; (repo,arcs,elems) = (41845312,19168,8843808), after rebuilding, repo size was 34974272, effective beam was -0.00146526 vs. requested beam 15
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:DeterminizeLatticePruned():determinize-lattice-pruned.cc:1231) Pruned state-level lattice with beam 7.5 and retrying determinization with that beam.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+WARNING (lattice-determinize-pruned[5.5.1182~1-e02e3]:CheckMemoryUsage():determinize-lattice-pruned.cc:316) Did not reach requested beam in determinize-lattice: size exceeds maximum 50000000 bytes; (repo,arcs,elems) = (41638624,445984,8224608), after rebuilding, repo size was 31853280, effective beam was 6.45879 vs. requested beam 7.5
+WARNING (lattice-determinize-pruned[5.5.1182~1-e02e3]:main():lattice-determinize-pruned.cc:119) For key CEB_001-000041, determinization did not succeed(partial output will be pruned tighter than the specified beam.)
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:158) Overall average logdet is -6.49717 over 180199 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:161) Applied transform to 6 utterances; 0 had errors.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+WARNING (lattice-determinize-pruned[5.5.1182~1-e02e3]:CheckMemoryUsage():determinize-lattice-pruned.cc:316) Did not reach requested beam in determinize-lattice: size exceeds maximum 50000000 bytes; (repo,arcs,elems) = (40975552,17888,9061560), after rebuilding, repo size was 34688192, effective beam was -0.000694224 vs. requested beam 15
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:DeterminizeLatticePruned():determinize-lattice-pruned.cc:1231) Pruned state-level lattice with beam 7.5 and retrying determinization with that beam.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+WARNING (lattice-determinize-pruned[5.5.1182~1-e02e3]:CheckMemoryUsage():determinize-lattice-pruned.cc:316) Did not reach requested beam in determinize-lattice: size exceeds maximum 50000000 bytes; (repo,arcs,elems) = (42781856,449632,7310064), after rebuilding, repo size was 32270432, effective beam was 6.91291 vs. requested beam 7.5
+WARNING (lattice-determinize-pruned[5.5.1182~1-e02e3]:main():lattice-determinize-pruned.cc:119) For key CEB_001-000042, determinization did not succeed(partial output will be pruned tighter than the specified beam.)
+LOG (gmm-rescore-lattice[5.5.1182~1-e02e3]:main():gmm-rescore-lattice.cc:103) Done 6 lattices with errors on 0, #frames is 180199
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+WARNING (lattice-determinize-pruned[5.5.1182~1-e02e3]:CheckMemoryUsage():determinize-lattice-pruned.cc:316) Did not reach requested beam in determinize-lattice: size exceeds maximum 50000000 bytes; (repo,arcs,elems) = (41830176,30240,9102864), after rebuilding, repo size was 33563456, effective beam was 1.33586 vs. requested beam 15
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:DeterminizeLatticePruned():determinize-lattice-pruned.cc:1231) Pruned state-level lattice with beam 7.5 and retrying determinization with that beam.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:RebuildRepository():determinize-lattice-pruned.cc:283) Rebuilding repository.
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:main():lattice-determinize-pruned.cc:159) Average input-lattice depth (measured at at state level) is 165.327, output depth is 20.4139, over 180199 frames  (average num-frames = 30033.2).
+LOG (lattice-determinize-pruned[5.5.1182~1-e02e3]:main():lattice-determinize-pruned.cc:164) Done 6 lattices, determinization finished earlier than specified by the beam (or output was empty) on 2 of these.
+# Accounting: time=467 threads=1
+# Ended (code 0) at Thu Aug 20 14:03:08 PST 2026, elapsed time 467 seconds

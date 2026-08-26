@@ -1,0 +1,7 @@
+# convert-ali /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mdl /home/troxyz1268/bisaya_asr/exp/tri3/1.mdl /home/troxyz1268/bisaya_asr/exp/tri3/tree "ark:gunzip -c /home/troxyz1268/bisaya_asr/exp/tri2_ali/ali.7.gz|" "ark:|gzip -c >/home/troxyz1268/bisaya_asr/exp/tri3/ali.7.gz" 
+# Started at Thu Aug 20 11:42:52 PST 2026
+#
+convert-ali /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mdl /home/troxyz1268/bisaya_asr/exp/tri3/1.mdl /home/troxyz1268/bisaya_asr/exp/tri3/tree 'ark:gunzip -c /home/troxyz1268/bisaya_asr/exp/tri2_ali/ali.7.gz|' 'ark:|gzip -c >/home/troxyz1268/bisaya_asr/exp/tri3/ali.7.gz' 
+LOG (convert-ali[5.5.1182~1-e02e3]:main():convert-ali.cc:120) Succeeded converting alignments for 25 files, failed for 0
+# Accounting: time=0 threads=1
+# Ended (code 0) at Thu Aug 20 11:42:52 PST 2026, elapsed time 0 seconds

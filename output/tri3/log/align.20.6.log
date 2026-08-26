@@ -1,0 +1,51 @@
+# gmm-align-compiled --transition-scale=1.0 --acoustic-scale=0.1 --self-loop-scale=0.1 --beam=40 --retry-beam=160 --careful=false "gmm-boost-silence --boost=1.0 1 /home/troxyz1268/bisaya_asr/exp/tri3/20.mdl - |" "ark:gunzip -c /home/troxyz1268/bisaya_asr/exp/tri3/fsts.6.gz|" "ark,s,cs:apply-cmvn  --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/6/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/6/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/6/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- | transform-feats --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/6/utt2spk ark:/home/troxyz1268/bisaya_asr/exp/tri3/trans.6 ark:- ark:- |" "ark:|gzip -c >/home/troxyz1268/bisaya_asr/exp/tri3/ali.6.gz" 
+# Started at Thu Aug 20 11:46:07 PST 2026
+#
+gmm-align-compiled --transition-scale=1.0 --acoustic-scale=0.1 --self-loop-scale=0.1 --beam=40 --retry-beam=160 --careful=false 'gmm-boost-silence --boost=1.0 1 /home/troxyz1268/bisaya_asr/exp/tri3/20.mdl - |' 'ark:gunzip -c /home/troxyz1268/bisaya_asr/exp/tri3/fsts.6.gz|' 'ark,s,cs:apply-cmvn  --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/6/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/6/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/6/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- | transform-feats --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/6/utt2spk ark:/home/troxyz1268/bisaya_asr/exp/tri3/trans.6 ark:- ark:- |' 'ark:|gzip -c >/home/troxyz1268/bisaya_asr/exp/tri3/ali.6.gz' 
+gmm-boost-silence --boost=1.0 1 /home/troxyz1268/bisaya_asr/exp/tri3/20.mdl - 
+LOG (gmm-boost-silence[5.5.1182~1-e02e3]:main():gmm-boost-silence.cc:93) Boosted weights for 5 pdfs, by factor of 1
+LOG (gmm-boost-silence[5.5.1182~1-e02e3]:main():gmm-boost-silence.cc:103) Wrote model to -
+transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- 
+apply-cmvn --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/6/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/6/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/6/feats.scp ark:- 
+transform-feats --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/6/utt2spk ark:/home/troxyz1268/bisaya_asr/exp/tri3/trans.6 ark:- ark:- 
+splice-feats ark:- ark:- 
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp0.9-CEB_014-000050
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp0.9-CEB_014-000051
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp0.9-CEB_014-000052
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp0.9-CEB_014-000053
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp0.9-CEB_014-000054
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp0.9-CEB_014-000055
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp0.9-CEB_015-000026
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp0.9-CEB_015-000027
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp0.9-CEB_015-000028
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp0.9-CEB_015-000029
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp0.9-CEB_015-000030
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp0.9-CEB_015-000031
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_002-000056
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_002-000057
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_002-000058
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_002-000059
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_002-000060
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_002-000061
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_003-000079
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_003-000080
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_003-000081
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_003-000082
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_003-000083
+WARNING (gmm-align-compiled[5.5.1182~1-e02e3]:AlignUtteranceWrapper():decoder-wrappers.cc:617) Retrying utterance sp1.1-CEB_003-000083 with beam 160
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_003-000084
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_004-000085
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_004-000086
+LOG (apply-cmvn[5.5.1182~1-e02e3]:main():apply-cmvn.cc:162) Applied cepstral mean normalization to 29 utterances, errors on 0
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_004-000087
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_004-000088
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:158) Overall average [pseudo-]logdet is -95.1545 over 484565 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:161) Applied transform to 29 utterances; 0 had errors.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:158) Overall average logdet is 6.08465 over 484565 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:161) Applied transform to 29 utterances; 0 had errors.
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:127) sp1.1-CEB_004-000089
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:135) Overall log-likelihood per frame is -47.6059 over 484565 frames.
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:137) Retried 1 out of 29 utterances.
+LOG (gmm-align-compiled[5.5.1182~1-e02e3]:main():gmm-align-compiled.cc:139) Done 29, errors on 0
+# Accounting: time=24 threads=1
+# Ended (code 0) at Thu Aug 20 11:46:31 PST 2026, elapsed time 24 seconds

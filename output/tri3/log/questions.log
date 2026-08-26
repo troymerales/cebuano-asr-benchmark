@@ -1,0 +1,2 @@
+cluster-phones /home/troxyz1268/bisaya_asr/exp/tri3/treeacc /home/troxyz1268/bisaya_asr/data/lang/phones/sets.int /home/troxyz1268/bisaya_asr/exp/tri3/questions.int 
+LOG (cluster-phones[5.5.1182~1-e02e3]:main():cluster-phones.cc:129) Wrote questions to /home/troxyz1268/bisaya_asr/exp/tri3/questions.int

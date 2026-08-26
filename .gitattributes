@@ -1,1 +1,10 @@
 *.sh text eol=lf
+
+# Kaldi model/decode output: a mix of true binary files and Kaldi-format
+# text (symbol tables, int lists) that Kaldi's own parsers are
+# line-ending sensitive about -- a stray \r from an autocrlf checkout can
+# break token parsing (e.g. a symbol table lookup on "SIL\r" vs "SIL").
+# Force byte-for-byte checkout on every clone, regardless of the
+# cloner's own core.autocrlf setting.
+models/tri3/** binary
+output/tri3/** binary

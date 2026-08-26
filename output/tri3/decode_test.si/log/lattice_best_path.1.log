@@ -1,0 +1,16 @@
+# lattice-depth-per-frame "ark:gunzip -c exp/tri3/decode_test.si/lat.1.gz|" "ark,t:|gzip -c > exp/tri3/decode_test.si/depth_tmp.1.gz" ark:- | lattice-best-path --acoustic-scale=0.1 ark:- ark:/dev/null "ark,t:|gzip -c >exp/tri3/decode_test.si/ali_tmp.1.gz" 
+# Started at Thu Aug 20 13:09:18 PST 2026
+#
+lattice-depth-per-frame 'ark:gunzip -c exp/tri3/decode_test.si/lat.1.gz|' 'ark,t:|gzip -c > exp/tri3/decode_test.si/depth_tmp.1.gz' ark:- 
+lattice-best-path --acoustic-scale=0.1 ark:- ark:/dev/null 'ark,t:|gzip -c >exp/tri3/decode_test.si/ali_tmp.1.gz' 
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:99) For utterance CEB_001-000038, best cost 6133 + 187840 = 193973 over 30033 frames.
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:99) For utterance CEB_001-000039, best cost 6544.95 + 193972 = 200516 over 30035 frames.
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:99) For utterance CEB_001-000040, best cost 6635.03 + 191533 = 198168 over 30030 frames.
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:99) For utterance CEB_001-000041, best cost 6891.02 + 192372 = 199263 over 30034 frames.
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:99) For utterance CEB_001-000042, best cost 6622.21 + 191733 = 198355 over 30032 frames.
+LOG (lattice-depth-per-frame[5.5.1182~1-e02e3]:main():lattice-depth-per-frame.cc:82) Done 6 lattices.
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:99) For utterance CEB_001-000043, best cost 6049.21 + 188072 = 194121 over 30035 frames.
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:124) Overall cost per frame is 6.57272 = 0.215736 [graph] + 6.35698 [acoustic] over 180199 frames.
+LOG (lattice-best-path[5.5.1182~1-e02e3]:main():lattice-best-path.cc:128) Done 6 lattices, failed for 0
+# Accounting: time=0 threads=1
+# Ended (code 0) at Thu Aug 20 13:09:18 PST 2026, elapsed time 0 seconds

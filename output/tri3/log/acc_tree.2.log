@@ -1,0 +1,17 @@
+# acc-tree-stats --ci-phones=1:2 /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mdl "ark,s,cs:apply-cmvn  --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- | transform-feats --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/utt2spk ark,s,cs:/home/troxyz1268/bisaya_asr/exp/tri3/trans.2 ark:- ark:- |" "ark:gunzip -c /home/troxyz1268/bisaya_asr/exp/tri2_ali/ali.2.gz|" /home/troxyz1268/bisaya_asr/exp/tri3/2.treeacc 
+# Started at Thu Aug 20 11:42:48 PST 2026
+#
+acc-tree-stats --ci-phones=1:2 /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mdl 'ark,s,cs:apply-cmvn  --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- | transform-feats --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/utt2spk ark,s,cs:/home/troxyz1268/bisaya_asr/exp/tri3/trans.2 ark:- ark:- |' 'ark:gunzip -c /home/troxyz1268/bisaya_asr/exp/tri2_ali/ali.2.gz|' /home/troxyz1268/bisaya_asr/exp/tri3/2.treeacc 
+transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- 
+splice-feats ark:- ark:- 
+transform-feats --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/utt2spk ark,s,cs:/home/troxyz1268/bisaya_asr/exp/tri3/trans.2 ark:- ark:- 
+apply-cmvn --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/feats.scp ark:- 
+LOG (apply-cmvn[5.5.1182~1-e02e3]:main():apply-cmvn.cc:162) Applied cepstral mean normalization to 24 utterances, errors on 0
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:158) Overall average [pseudo-]logdet is -95.1545 over 367222 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:161) Applied transform to 24 utterances; 0 had errors.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:158) Overall average logdet is 1.39796 over 367222 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:161) Applied transform to 24 utterances; 0 had errors.
+LOG (acc-tree-stats[5.5.1182~1-e02e3]:main():acc-tree-stats.cc:118) Accumulated stats for 24 files, 0 failed due to no alignment, 0 failed for other reasons.
+LOG (acc-tree-stats[5.5.1182~1-e02e3]:main():acc-tree-stats.cc:121) Number of separate stats (context-dependent states) is 10147
+# Accounting: time=2 threads=1
+# Ended (code 0) at Thu Aug 20 11:42:50 PST 2026, elapsed time 2 seconds

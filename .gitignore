@@ -1,8 +1,7 @@
 .env
 
 data/
-output/
-models/
+models/whisper-small-bisaya-lora/
 references/
 .ipynb_checkpoints/
 

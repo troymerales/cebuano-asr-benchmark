@@ -1,0 +1,18 @@
+# gmm-acc-stats-ali /home/troxyz1268/bisaya_asr/exp/tri3/22.mdl "ark,s,cs:apply-cmvn  --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- | transform-feats --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/utt2spk ark:/home/troxyz1268/bisaya_asr/exp/tri3/trans.8 ark:- ark:- |" "ark,s,cs:gunzip -c /home/troxyz1268/bisaya_asr/exp/tri3/ali.8.gz|" /home/troxyz1268/bisaya_asr/exp/tri3/22.8.acc 
+# Started at Thu Aug 20 11:46:41 PST 2026
+#
+gmm-acc-stats-ali /home/troxyz1268/bisaya_asr/exp/tri3/22.mdl 'ark,s,cs:apply-cmvn  --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- | transform-feats --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/utt2spk ark:/home/troxyz1268/bisaya_asr/exp/tri3/trans.8 ark:- ark:- |' 'ark,s,cs:gunzip -c /home/troxyz1268/bisaya_asr/exp/tri3/ali.8.gz|' /home/troxyz1268/bisaya_asr/exp/tri3/22.8.acc 
+transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- 
+transform-feats --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/utt2spk ark:/home/troxyz1268/bisaya_asr/exp/tri3/trans.8 ark:- ark:- 
+splice-feats ark:- ark:- 
+apply-cmvn --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/feats.scp ark:- 
+LOG (apply-cmvn[5.5.1182~1-e02e3]:main():apply-cmvn.cc:162) Applied cepstral mean normalization to 29 utterances, errors on 0
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:158) Overall average [pseudo-]logdet is -95.1545 over 327865 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:161) Applied transform to 29 utterances; 0 had errors.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:158) Overall average logdet is 3.67645 over 327865 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:161) Applied transform to 29 utterances; 0 had errors.
+LOG (gmm-acc-stats-ali[5.5.1182~1-e02e3]:main():gmm-acc-stats-ali.cc:112) Done 29 files, 0 with errors.
+LOG (gmm-acc-stats-ali[5.5.1182~1-e02e3]:main():gmm-acc-stats-ali.cc:115) Overall avg like per frame (Gaussian only) = -46.952 over 327865 frames.
+LOG (gmm-acc-stats-ali[5.5.1182~1-e02e3]:main():gmm-acc-stats-ali.cc:123) Written accs.
+# Accounting: time=4 threads=1
+# Ended (code 0) at Thu Aug 20 11:46:45 PST 2026, elapsed time 4 seconds

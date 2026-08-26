@@ -1,0 +1,52 @@
+# ali-to-post "ark:gunzip -c /home/troxyz1268/bisaya_asr/exp/tri3/ali.2.gz|" ark:- | gmm-acc-stats-twofeats /home/troxyz1268/bisaya_asr/exp/tri3/35.mdl "ark,s,cs:apply-cmvn  --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- | transform-feats --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/utt2spk ark:/home/troxyz1268/bisaya_asr/exp/tri3/trans.2 ark:- ark:- |" "ark,s,cs:apply-cmvn  --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- |" ark,s,cs:- /home/troxyz1268/bisaya_asr/exp/tri3/35.2.acc 
+# Started at Thu Aug 20 11:48:12 PST 2026
+#
+gmm-acc-stats-twofeats /home/troxyz1268/bisaya_asr/exp/tri3/35.mdl 'ark,s,cs:apply-cmvn  --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- | transform-feats --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/utt2spk ark:/home/troxyz1268/bisaya_asr/exp/tri3/trans.2 ark:- ark:- |' 'ark,s,cs:apply-cmvn  --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- |' ark,s,cs:- /home/troxyz1268/bisaya_asr/exp/tri3/35.2.acc 
+ali-to-post 'ark:gunzip -c /home/troxyz1268/bisaya_asr/exp/tri3/ali.2.gz|' ark:- 
+apply-cmvn --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/feats.scp ark:- 
+splice-feats ark:- ark:- 
+transform-feats --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/utt2spk ark:/home/troxyz1268/bisaya_asr/exp/tri3/trans.2 ark:- ark:- 
+transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- 
+apply-cmvn --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/2/feats.scp ark:- 
+splice-feats ark:- ark:- 
+transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- 
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -47.2549 over 12184 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -46.6197 over 29998 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -46.8447 over 26493 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -46.2365 over 29763 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -47.4775 over 24319 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -47.7019 over 29830 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -45.2515 over 13671 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -46.5516 over 9176 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -48.6252 over 17911 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -48.5071 over 29271 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:146) Avg like per frame so far is -47.1914
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -44.4884 over 14570 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -45.7217 over 20267 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -47.3066 over 21496 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -52.4418 over 8374 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -47.8265 over 8502 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -48.6887 over 8743 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -46.7507 over 11465 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -46.5092 over 13708 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -50.2271 over 9191 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -49.7437 over 4506 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:146) Avg like per frame so far is -47.2519
+LOG (apply-cmvn[5.5.1182~1-e02e3]:main():apply-cmvn.cc:162) Applied cepstral mean normalization to 24 utterances, errors on 0
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -50.4076 over 5430 frames.
+LOG (apply-cmvn[5.5.1182~1-e02e3]:main():apply-cmvn.cc:162) Applied cepstral mean normalization to 24 utterances, errors on 0
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -51.7269 over 4763 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:158) Overall average [pseudo-]logdet is -95.1545 over 367222 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:161) Applied transform to 24 utterances; 0 had errors.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -49.8814 over 7522 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:158) Overall average logdet is 0.625515 over 367222 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:161) Applied transform to 24 utterances; 0 had errors.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:158) Overall average [pseudo-]logdet is -95.1545 over 367222 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:161) Applied transform to 24 utterances; 0 had errors.
+LOG (ali-to-post[5.5.1182~1-e02e3]:main():ali-to-post.cc:73) Converted 24 alignments.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:140) Average like for this file is -49.5509 over 6069 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:150) Done 24 files, 0 with no posteriors, 0 with no second features, 0 with other errors.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:155) Overall avg like per frame (Gaussian only) = -47.4484 over 367222 frames.
+LOG (gmm-acc-stats-twofeats[5.5.1182~1-e02e3]:main():gmm-acc-stats-twofeats.cc:163) Written accs.
+# Accounting: time=6 threads=1
+# Ended (code 0) at Thu Aug 20 11:48:18 PST 2026, elapsed time 6 seconds

@@ -1,0 +1,31 @@
+# ali-to-post "ark:gunzip -c /home/troxyz1268/bisaya_asr/exp/tri3/ali.8.gz|" ark:- | weight-silence-post 0.0 1:2 /home/troxyz1268/bisaya_asr/exp/tri3/2.mdl ark:- ark:- | gmm-est-fmllr --fmllr-update-type=full --spk2utt=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/spk2utt /home/troxyz1268/bisaya_asr/exp/tri3/2.mdl "ark,s,cs:apply-cmvn  --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- | transform-feats --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/utt2spk ark,s,cs:/home/troxyz1268/bisaya_asr/exp/tri3/trans.8 ark:- ark:- |" ark:- ark:/home/troxyz1268/bisaya_asr/exp/tri3/tmp_trans.8 
+# Started at Thu Aug 20 11:43:04 PST 2026
+#
+ali-to-post 'ark:gunzip -c /home/troxyz1268/bisaya_asr/exp/tri3/ali.8.gz|' ark:- 
+weight-silence-post 0.0 1:2 /home/troxyz1268/bisaya_asr/exp/tri3/2.mdl ark:- ark:- 
+gmm-est-fmllr --fmllr-update-type=full --spk2utt=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/spk2utt /home/troxyz1268/bisaya_asr/exp/tri3/2.mdl 'ark,s,cs:apply-cmvn  --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- | transform-feats --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/utt2spk ark,s,cs:/home/troxyz1268/bisaya_asr/exp/tri3/trans.8 ark:- ark:- |' ark:- ark:/home/troxyz1268/bisaya_asr/exp/tri3/tmp_trans.8 
+transform-feats /home/troxyz1268/bisaya_asr/exp/tri2_ali/final.mat ark:- ark:- 
+transform-feats --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/utt2spk ark,s,cs:/home/troxyz1268/bisaya_asr/exp/tri3/trans.8 ark:- ark:- 
+splice-feats ark:- ark:- 
+apply-cmvn --utt2spk=ark:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/utt2spk scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/cmvn.scp scp:/home/troxyz1268/bisaya_asr/data/train_sp/split8/8/feats.scp ark:- 
+LOG (gmm-est-fmllr[5.5.1182~1-e02e3]:ComputeFmllrMatrixDiagGmmFull():fmllr-diag-gmm.cc:262) fMLLR objf improvement is 1.90952 per frame over 41387 frames.
+LOG (gmm-est-fmllr[5.5.1182~1-e02e3]:main():gmm-est-fmllr.cc:143) For speaker sp1.1-CEB_009, auxf-impr from fMLLR is 1.90952, over 41387 frames.
+LOG (gmm-est-fmllr[5.5.1182~1-e02e3]:ComputeFmllrMatrixDiagGmmFull():fmllr-diag-gmm.cc:262) fMLLR objf improvement is 6.09718 per frame over 21802 frames.
+LOG (gmm-est-fmllr[5.5.1182~1-e02e3]:main():gmm-est-fmllr.cc:143) For speaker sp1.1-CEB_011, auxf-impr from fMLLR is 6.09718, over 21802 frames.
+LOG (gmm-est-fmllr[5.5.1182~1-e02e3]:ComputeFmllrMatrixDiagGmmFull():fmllr-diag-gmm.cc:262) fMLLR objf improvement is 1.3273 per frame over 20843 frames.
+LOG (gmm-est-fmllr[5.5.1182~1-e02e3]:main():gmm-est-fmllr.cc:143) For speaker sp1.1-CEB_013, auxf-impr from fMLLR is 1.3273, over 20843 frames.
+LOG (gmm-est-fmllr[5.5.1182~1-e02e3]:ComputeFmllrMatrixDiagGmmFull():fmllr-diag-gmm.cc:262) fMLLR objf improvement is 1.5407 per frame over 49648 frames.
+LOG (gmm-est-fmllr[5.5.1182~1-e02e3]:main():gmm-est-fmllr.cc:143) For speaker sp1.1-CEB_014, auxf-impr from fMLLR is 1.5407, over 49648 frames.
+LOG (apply-cmvn[5.5.1182~1-e02e3]:main():apply-cmvn.cc:162) Applied cepstral mean normalization to 29 utterances, errors on 0
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:158) Overall average [pseudo-]logdet is -95.1545 over 327865 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:161) Applied transform to 29 utterances; 0 had errors.
+LOG (ali-to-post[5.5.1182~1-e02e3]:main():ali-to-post.cc:73) Converted 29 alignments.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:158) Overall average logdet is 1.20885 over 327865 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:161) Applied transform to 29 utterances; 0 had errors.
+LOG (weight-silence-post[5.5.1182~1-e02e3]:main():weight-silence-post.cc:95) Done 29 posteriors.
+LOG (gmm-est-fmllr[5.5.1182~1-e02e3]:ComputeFmllrMatrixDiagGmmFull():fmllr-diag-gmm.cc:262) fMLLR objf improvement is 1.15515 per frame over 123591 frames.
+LOG (gmm-est-fmllr[5.5.1182~1-e02e3]:main():gmm-est-fmllr.cc:143) For speaker sp1.1-CEB_015, auxf-impr from fMLLR is 1.15515, over 123591 frames.
+LOG (gmm-est-fmllr[5.5.1182~1-e02e3]:main():gmm-est-fmllr.cc:188) Done 29 files, 0 with no posts, 0 with other errors.
+LOG (gmm-est-fmllr[5.5.1182~1-e02e3]:main():gmm-est-fmllr.cc:190) Overall fMLLR auxf impr per frame is 1.78366 over 257271 frames.
+# Accounting: time=14 threads=1
+# Ended (code 0) at Thu Aug 20 11:43:18 PST 2026, elapsed time 14 seconds

@@ -1,0 +1,32 @@
+# gunzip -c exp/tri3/decode_test.si/lat.3.gz | lattice-to-post --acoustic-scale=0.083333 ark:- ark:- | weight-silence-post 0.01 1:2 exp/tri3/final.alimdl ark:- ark:- | gmm-post-to-gpost exp/tri3/final.alimdl "ark,s,cs:apply-cmvn  --utt2spk=ark:data/test/split3/3/utt2spk scp:data/test/split3/3/cmvn.scp scp:data/test/split3/3/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats exp/tri3/final.mat ark:- ark:- |" ark:- ark:- | gmm-est-fmllr-gpost --fmllr-update-type=full --spk2utt=ark:data/test/split3/3/spk2utt exp/tri3/final.mdl "ark,s,cs:apply-cmvn  --utt2spk=ark:data/test/split3/3/utt2spk scp:data/test/split3/3/cmvn.scp scp:data/test/split3/3/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats exp/tri3/final.mat ark:- ark:- |" ark,s,cs:- ark:exp/tri3/decode_test/pre_trans.3 
+# Started at Thu Aug 20 13:09:40 PST 2026
+#
+lattice-to-post --acoustic-scale=0.083333 ark:- ark:- 
+weight-silence-post 0.01 1:2 exp/tri3/final.alimdl ark:- ark:- 
+gmm-est-fmllr-gpost --fmllr-update-type=full --spk2utt=ark:data/test/split3/3/spk2utt exp/tri3/final.mdl 'ark,s,cs:apply-cmvn  --utt2spk=ark:data/test/split3/3/utt2spk scp:data/test/split3/3/cmvn.scp scp:data/test/split3/3/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats exp/tri3/final.mat ark:- ark:- |' ark,s,cs:- ark:exp/tri3/decode_test/pre_trans.3 
+gmm-post-to-gpost exp/tri3/final.alimdl 'ark,s,cs:apply-cmvn  --utt2spk=ark:data/test/split3/3/utt2spk scp:data/test/split3/3/cmvn.scp scp:data/test/split3/3/feats.scp ark:- | splice-feats  ark:- ark:- | transform-feats exp/tri3/final.mat ark:- ark:- |' ark:- ark:- 
+transform-feats exp/tri3/final.mat ark:- ark:- 
+splice-feats ark:- ark:- 
+apply-cmvn --utt2spk=ark:data/test/split3/3/utt2spk scp:data/test/split3/3/cmvn.scp scp:data/test/split3/3/feats.scp ark:- 
+apply-cmvn --utt2spk=ark:data/test/split3/3/utt2spk scp:data/test/split3/3/cmvn.scp scp:data/test/split3/3/feats.scp ark:- 
+splice-feats ark:- ark:- 
+transform-feats exp/tri3/final.mat ark:- ark:- 
+LOG (apply-cmvn[5.5.1182~1-e02e3]:main():apply-cmvn.cc:162) Applied cepstral mean normalization to 7 utterances, errors on 0
+LOG (apply-cmvn[5.5.1182~1-e02e3]:main():apply-cmvn.cc:162) Applied cepstral mean normalization to 7 utterances, errors on 0
+LOG (lattice-to-post[5.5.1182~1-e02e3]:main():lattice-to-post.cc:107) Overall average log-like/frame is -4.26618 over 36147 frames.  Average acoustic like/frame is -4.0354
+LOG (lattice-to-post[5.5.1182~1-e02e3]:main():lattice-to-post.cc:111) Done 7 lattices.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:158) Overall average [pseudo-]logdet is -95.1545 over 36147 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:161) Applied transform to 7 utterances; 0 had errors.
+LOG (weight-silence-post[5.5.1182~1-e02e3]:main():weight-silence-post.cc:95) Done 7 posteriors.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:158) Overall average [pseudo-]logdet is -95.1545 over 36147 frames.
+LOG (transform-feats[5.5.1182~1-e02e3]:main():transform-feats.cc:161) Applied transform to 7 utterances; 0 had errors.
+LOG (gmm-post-to-gpost[5.5.1182~1-e02e3]:main():gmm-post-to-gpost.cc:124) Done 7 files, 0 with no posteriors, 0 with other errors.
+LOG (gmm-post-to-gpost[5.5.1182~1-e02e3]:main():gmm-post-to-gpost.cc:128) Overall avg like per frame (Gaussian only) = -49.5405 over 30270.1 frames.
+LOG (gmm-post-to-gpost[5.5.1182~1-e02e3]:main():gmm-post-to-gpost.cc:131) Done converting post to gpost
+LOG (gmm-est-fmllr-gpost[5.5.1182~1-e02e3]:ComputeFmllrMatrixDiagGmmFull():fmllr-diag-gmm.cc:262) fMLLR objf improvement is 6.01864 per frame over 30270.2 frames.
+LOG (gmm-est-fmllr-gpost[5.5.1182~1-e02e3]:main():gmm-est-fmllr-gpost.cc:141) For speaker CEB_012, auxf-impr from fMLLR is 6.01864, over 30270.2 frames.
+
+LOG (gmm-est-fmllr-gpost[5.5.1182~1-e02e3]:main():gmm-est-fmllr-gpost.cc:186) Done 7 files, 0 with no gposts, 0 with other errors.
+LOG (gmm-est-fmllr-gpost[5.5.1182~1-e02e3]:main():gmm-est-fmllr-gpost.cc:188) Overall fMLLR auxf impr per frame is 6.01864 over 30270.2 frames.
+# Accounting: time=2 threads=1
+# Ended (code 0) at Thu Aug 20 13:09:42 PST 2026, elapsed time 2 seconds
