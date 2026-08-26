@@ -19,7 +19,6 @@ from dotenv import load_dotenv
 # one first (doesn't override already-set vars), then fall back to the
 # shared one at the deploy/ root.
 _here = Path(__file__).resolve().parent
-load_dotenv(_here / ".env")
 load_dotenv(_here.parent / ".env")
 
 import streamlit as st

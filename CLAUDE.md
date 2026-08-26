@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repository is
 
-A benchmark comparing two Bisaya ASR systems on the same corpus:
+A benchmark comparing three Bisaya ASR systems on the same corpus:
 
 1. A **Kaldi HMM-GMM model trained from scratch** — a 2-gram, 3-state,
    speaker-adaptive-trained (SAT) HMM-GMM using the PS27 27-phoneme set,
@@ -17,49 +17,74 @@ A benchmark comparing two Bisaya ASR systems on the same corpus:
    and must never be committed or redistributed.
 2. **ElevenLabs Scribe**, a commercial ASR API, evaluated zero-shot on the
    same corpus for comparison.
+3. A **Whisper small model fine-tuned on this corpus**, on Kaggle (GPU) --
+   see "Whisper fine-tuning" further down. Unlike ElevenLabs, this system
+   is trained on 80% of the corpus's speakers, the same speaker-independent
+   split Kaldi uses.
 
-There is no source package, build system, linter, or test suite. The core
-benchmark is four Jupyter notebooks, each a runnable pipeline stage,
-validated empirically by the WER/CER printed at the end of a run (see
-"Notebook structure and dependency chain" below). Two more notebooks and
-a small deployment demo exist alongside it but are **not** part of that
-pipeline — see "Whisper fine-tuning" and "Deployment demo" further down.
+There is no source package, build system, linter, or test suite. All five
+notebooks live under `notebooks/`, each self-contained (see "Notebook
+structure and dependency chain" below for the run order and how they hand
+off to each other). A small deployment demo exists alongside the
+benchmark but is **not** part of it -- see "Deployment demo" further down.
 
 ## Notebook structure and dependency chain
 
+All five notebooks live under `notebooks/`:
+
 ```
-train_kaldi.ipynb  ->  exported Kaldi model (models/tri3/, output/tri3/)
+notebooks/train_kaldi.ipynb  ->  exported Kaldi model (models/tri3/, output/tri3/)
         |
         v
-evaluate_kaldi.ipynb  ---\
-                          +--> compare.ipynb
-evaluate_elevenlabs.ipynb -/
+notebooks/evaluate_kaldi.ipynb  ------\
+                                       |
+notebooks/evaluate_elevenlabs.ipynb --+--> notebooks/compare.ipynb
+                                       |
+notebooks/finetune_whisper.ipynb -----/
+        (runs on Kaggle; output/whisper/results.csv is downloaded
+        from there and dropped in manually -- see below)
 ```
 
 Each notebook is self-contained for its own purpose and reads/writes only
 saved files under `output/` — none of them import from another notebook.
+Because `notebooks/train_kaldi.ipynb` and `notebooks/compare.ipynb` (etc.)
+no longer sit at the repo root, every notebook's own default relative
+paths (`CORPUS_DIR`, `RESULTS_DIR`, `MODELS_DIR`) are `../data/...`,
+`../output`, `../models` -- one level up from `notebooks/` back to the
+repo root. This assumes Jupyter's normal default: a notebook's kernel
+working directory is the directory containing the `.ipynb` file itself.
 
-1. **`train_kaldi.ipynb`** (WSL2/Ubuntu only — Kaldi doesn't build on
-   native Windows) — trains the Kaldi HMM-GMM model from scratch: data
-   prep, lexicon, LM, GMM training progression, decode, then exports
-   `output/tri3/` (full decode/model output) and `models/tri3/` (curated
-   subset needed to decode new audio — see `models/tri3/README.md`).
-2. **`evaluate_kaldi.ipynb`** (Windows/plain Python) — reads
+1. **`notebooks/train_kaldi.ipynb`** (WSL2/Ubuntu only — Kaldi doesn't
+   build on native Windows) — trains the Kaldi HMM-GMM model from
+   scratch: data prep, lexicon, LM, GMM training progression, decode,
+   then exports `output/tri3/` (full decode/model output) and
+   `models/tri3/` (curated subset needed to decode new audio — see
+   `models/tri3/README.md`, if present).
+2. **`notebooks/evaluate_kaldi.ipynb`** (Windows/plain Python) — reads
    `train_kaldi.ipynb`'s already-decoded output (Kaldi itself can't run on
    native Windows, so no inference happens in this notebook, only scoring
    of predictions Kaldi already produced under WSL) and computes **raw**
    (non-normalized) WER/CER, exporting `output/kaldi/results.csv`.
    Requires `train_kaldi.ipynb` to have run through decode + export.
-3. **`evaluate_elevenlabs.ipynb`** (plain Python) — calls the ElevenLabs
-   API over the full corpus, computes **raw** WER/CER, and exports
-   `output/elevenlabs/results.csv`. Independent of (1)/(2) entirely —
-   needs only the corpus and an `ELEVENLABS_API_KEY`.
-4. **`compare.ipynb`** (plain Python) — the only notebook that applies
-   text normalization. Loads both raw `results.csv` files, computes
-   normalized WER/CER itself (via `normalize_bisaya()`, defined once,
-   here only), and produces the side-by-side comparison: headline table,
-   raw-vs-normalized breakdown, word/char confusion tables, charts.
-   Requires (2) and (3) to have each run at least once.
+3. **`notebooks/evaluate_elevenlabs.ipynb`** (plain Python) — calls the
+   ElevenLabs API over the full corpus, computes **raw** WER/CER, and
+   exports `output/elevenlabs/results.csv`. Independent of (1)/(2)
+   entirely — needs only the corpus and an `ELEVENLABS_API_KEY`.
+4. **`notebooks/finetune_whisper.ipynb`** (Kaggle, GPU — not run locally)
+   — fine-tunes `openai/whisper-small` on the same speaker-independent
+   split Kaldi uses, then (in a section at the bottom) evaluates the
+   fine-tuned checkpoint on the held-out test set and exports a
+   `results.csv` you download from Kaggle's Output tab and drop into
+   `output/whisper/results.csv` locally. A further section evaluates the
+   original pre-fine-tuning checkpoint on the same test set as an
+   ablation (exported separately, not read by `compare.ipynb`). See
+   "Whisper fine-tuning" further down for the full detail.
+5. **`notebooks/compare.ipynb`** (plain Python) — the only notebook that
+   applies text normalization. Loads all three raw `results.csv` files,
+   computes normalized WER/CER itself (via `normalize_bisaya()`, defined
+   once, here only), and produces the side-by-side comparison: headline
+   table, raw-vs-normalized breakdown, word/char confusion tables,
+   charts. Requires (2), (3), and (4) to have each run at least once.
 
 **Normalization lives in exactly one place** (`compare.ipynb`'s
 `normalize_bisaya()`): lowercase, strip punctuation/hyphens, fold u/o
@@ -72,25 +97,28 @@ single source of truth for what "normalized" means.
 No package manager / lockfile — dependencies are plain `pip`/`apt`
 installs.
 
-**`train_kaldi.ipynb`** (WSL2/Ubuntu, assumes an existing Kaldi checkout
-at `KALDI_ROOT`, default `~/kaldi` — this notebook never clones Kaldi):
+**`notebooks/train_kaldi.ipynb`** (WSL2/Ubuntu, assumes an existing Kaldi
+checkout at `KALDI_ROOT`, default `~/kaldi` — this notebook never clones
+Kaldi):
 
 ```bash
 python3 -m venv ~/asr-venv && source ~/asr-venv/bin/activate
 pip install jupyterlab ipykernel pandas pyarrow tqdm
 cd "/mnt/c/path/to/this/repo"
-jupyter lab train_kaldi.ipynb
+jupyter lab notebooks/train_kaldi.ipynb
 ```
 
 Run cells in order, top to bottom. Every stage is wrapped in
 `stage(name, done, fn)`, which skips work whose output already exists —
 re-running after an interruption only redoes whatever didn't finish.
 
-**`evaluate_elevenlabs.ipynb`, `evaluate_kaldi.ipynb`, `compare.ipynb`**
-(plain Python, Windows or Linux, no WSL/Kaldi dependency): `pip install
-pandas pyarrow jiwer matplotlib`, plus `python-dotenv` and `elevenlabs`
-for `evaluate_elevenlabs.ipynb` (needs a git-ignored `.env` with
-`ELEVENLABS_API_KEY`).
+**`notebooks/evaluate_elevenlabs.ipynb`, `notebooks/evaluate_kaldi.ipynb`,
+`notebooks/compare.ipynb`** (plain Python, Windows or Linux, no WSL/Kaldi
+dependency): `pip install pandas pyarrow jiwer matplotlib`, plus
+`python-dotenv` and `elevenlabs` for `evaluate_elevenlabs.ipynb` (needs a
+git-ignored `.env` at the repo root with `ELEVENLABS_API_KEY` --
+`load_dotenv()`'s default upward search finds it fine from `notebooks/`).
+
 
 **Known WSL/Kaldi build gotchas** (apply to `train_kaldi.ipynb` only):
 - `libatlas-base-dev` isn't packaged on newer Ubuntu — Kaldi's math
@@ -116,21 +144,24 @@ for `evaluate_elevenlabs.ipynb` (needs a git-ignored `.env` with
 
 ## Corpus and join key
 
-`CORPUS_DIR` (default `data/bisaya_audio`) holds Parquet shards, one row
-per utterance, with a nested `audio` struct column and a `speaker_id`/
-`transcript` per row — not pre-split into train/test. `train_kaldi.ipynb`
-splits it **by speaker**, ~80/20, fixed seed 42 (checked invariant:
-`train_speakers.isdisjoint(test_speakers)`).
+`CORPUS_DIR` (default `../data/bisaya_audio`, relative to `notebooks/`)
+holds Parquet shards, one row per utterance, with a nested `audio` struct
+column and a `speaker_id`/`transcript` per row — not pre-split into
+train/test. `train_kaldi.ipynb` splits it **by speaker**, ~80/20, fixed
+seed 42 (checked invariant: `train_speakers.isdisjoint(test_speakers)`).
+`finetune_whisper.ipynb` (on Kaggle) recomputes the identical split
+independently from the same seed, rather than sharing state with
+`train_kaldi.ipynb` across two different machines/environments.
 
-Both `evaluate_kaldi.ipynb` and `evaluate_elevenlabs.ipynb` load every
-Parquet shard the same way (`sorted()` glob order,
-`pd.concat(..., ignore_index=True)`) and stamp a `corpus_index` column
-(each row's position in that concatenation). This is the join key
-`compare.ipynb` uses to line up the same utterances across both systems'
-`results.csv` exports, and it's also how Kaldi utterance IDs
-(`{speaker_id}-{corpus_index:06d}`) get mapped back to corpus metadata.
-**Keep both notebooks' corpus-loading code in that exact order** — the
-join breaks silently otherwise.
+`evaluate_kaldi.ipynb`, `evaluate_elevenlabs.ipynb`, and
+`finetune_whisper.ipynb` all load every Parquet shard the same way
+(`sorted()` glob order, `pd.concat(..., ignore_index=True)`) and stamp a
+`corpus_index` column (each row's position in that concatenation). This
+is the join key `compare.ipynb` uses to line up the same utterances
+across all three systems' `results.csv` exports, and it's also how Kaldi
+utterance IDs (`{speaker_id}-{corpus_index:06d}`) get mapped back to
+corpus metadata. **Keep every notebook's corpus-loading code in that
+exact order** — the join breaks silently otherwise.
 
 ## `output/` and `models/` layout
 
@@ -141,35 +172,60 @@ output/
   tri3/                    # train_kaldi.ipynb: full exp/tri3 (model + decode + logs)
   kaldi/results.csv        # evaluate_kaldi.ipynb: raw reference/prediction/WER/CER/metadata
   elevenlabs/results.csv   # evaluate_elevenlabs.ipynb: same shape, for ElevenLabs Scribe
+  whisper/results.csv      # finetune_whisper.ipynb's eval section: same shape, for fine-tuned Whisper
+                            # (downloaded from Kaggle's Output tab, dropped in manually)
+  whisper/results_pretrained.csv  # same notebook's pre-fine-tuning baseline ablation -- NOT read by compare.ipynb
 models/
   tri3/                    # curated subset of output/tri3/ -- just what's needed to decode new audio
 ```
 
-Neither `results.csv` has `norm_*` columns — see "Normalization lives in
-exactly one place" above.
+None of the `results.csv` files have `norm_*` columns — see "Normalization
+lives in exactly one place" above.
 
-## Whisper fine-tuning (standalone, not part of the benchmark)
+## Whisper fine-tuning (`notebooks/finetune_whisper.ipynb`, on Kaggle)
 
-`fine_tune_whisper.ipynb` and `fine-tune-whisper-kaggle.ipynb` are **not**
-part of the `train_kaldi.ipynb` -> `compare.ipynb` pipeline above -- neither
-exports a `results.csv`, neither is read by `compare.ipynb`, and this is
-deliberate (a fine-tuned Whisper is an exploratory third system, not
-wired into the two-system benchmark's WER/CER comparison).
+Unlike `train_kaldi.ipynb` -> `compare.ipynb`, this notebook **does** feed
+into the benchmark -- it's system 3, and its eval section's
+`output/whisper/results.csv` is one of the three files `compare.ipynb`
+reads. It just can't run locally (needs a GPU), so it lives on Kaggle as
+the hosted notebook `troymerales/finetune-whisper` (kernel id
+131784027), and the local copy under `notebooks/finetune_whisper.ipynb`
+is a synced-down mirror, not something you run directly. A top cell
+("Claude Edit Log") tracks the version history of fixes pushed directly
+to the Kaggle copy -- check it (and the actual `current_version_number`
+via the Kaggle API/UI) before assuming the local mirror matches what's
+live, since edits happen on Kaggle first and get synced down, not the
+other way around.
 
-- **`fine_tune_whisper.ipynb`** is the unmodified Hugging Face
-  ["Fine-Tune Whisper for Multilingual ASR"](https://huggingface.co/blog/fine-tune-whisper)
-  Colab tutorial (Hindi/Common Voice) -- kept only as an unmodified
-  reference. Never edit this file; adapt `fine-tune-whisper-kaggle.ipynb`
-  instead.
-- **`fine-tune-whisper-kaggle.ipynb`** is the real, actively-run notebook:
-  fine-tunes `openai/whisper-small` on this project's actual Bisaya
-  corpus, on Kaggle (GPU quota, Kaggle Secrets for `HF_TOKEN`, corpus
-  attached as a Kaggle Dataset -- see the notebook's own "Kaggle Setup"
-  section). Uses `language="tl"` (Tagalog) as Whisper's closest built-in
-  code -- there's no Cebuano/Bisaya token.
+Fine-tunes `openai/whisper-small` on this project's actual Bisaya corpus
+(GPU quota, Kaggle Secrets for `HF_TOKEN`, corpus attached as a Kaggle
+Dataset -- see the notebook's own "Kaggle Setup" section), pushing the
+result to the Hugging Face Hub (`troxyz1268/whisper-small-bisaya`). Uses
+`language="tl"` (Tagalog) as Whisper's closest built-in code -- there's
+no Cebuano/Bisaya token. Below the training cells, two further sections:
 
-**Kaggle-environment gotchas** (hard-won from real runs, apply to
-`fine-tune-whisper-kaggle.ipynb` specifically):
+- **"Evaluate on Held-Out Test Set"** -- loads the fine-tuned checkpoint
+  fresh from the Hub (not the in-kernel trained objects, so it's correct
+  whether or not training ran in that session), evaluates it on the same
+  19-utterance held-out test set `evaluate_kaldi.ipynb`/
+  `evaluate_elevenlabs.ipynb` use locally (recomputes the speaker split
+  independently, seed 42), and exports `output/whisper/results.csv` for
+  `compare.ipynb`. Supports resuming from a precomputed checkpoint
+  attached as a Kaggle Dataset Input (Kaggle wipes `/kaggle/working/` on
+  every kernel stop/restart, so a finished run's checkpoint doesn't
+  survive on its own) -- found automatically by filename via a recursive
+  glob (`Path("/kaggle/input").glob("**/<filename>.parquet")`), since
+  this environment nests attached inputs three levels deep
+  (`/kaggle/input/datasets/<user>/<slug>/...`), not the flat
+  `/kaggle/input/<slug>/...` some Kaggle docs assume.
+- **"Compare Pre- vs. Post-Fine-Tuning"** -- runs the *original,
+  unmodified* `openai/whisper-small` checkpoint over the same held-out
+  set as a baseline ablation, exporting `output/whisper/results_pretrained.csv`
+  separately -- **not** read by `compare.ipynb`. Three matplotlib charts,
+  each showing pre- and post-fine-tuning together (pooled WER/CER,
+  paired per-utterance WER, error composition).
+
+**Kaggle-environment gotchas** (hard-won from real runs):
 - **Pin `datasets<4.0`.** 4.0+ made `torchcodec` a hard requirement for
   decoding `Audio` columns, and torchcodec needs an FFmpeg build whose
   shared libs (`libavutil.so.57-60`) aren't present on Kaggle's image --
@@ -203,6 +259,31 @@ wired into the two-system benchmark's WER/CER comparison).
   alignment for training. `prepare_dataset` instead uses the corpus's
   word-level timestamps (`words`: list of `{text, start, end}`) to split
   each utterance into <=28s chunks with correctly matched audio/text.
+- **`torch.cuda.is_available()` only confirms the driver sees a GPU, not
+  that the installed torch build has kernels for it.** Confirmed via a
+  real `CUDA error: no kernel image is available for execution on the
+  device` -- on a T4, from skipping the "Prepare Environment" reinstall
+  cells; on an assigned Tesla P100 (compute capability 6.0/sm_60), even
+  with those cells run, since Kaggle's default preinstalled
+  `torch==2.13.0+cu130` dropped kernel support for Pascal-class GPUs
+  entirely. Device selection should run a real tiny op on `cuda`
+  (`torch.zeros(1, device="cuda") + 1`) and fall back to CPU if that
+  raises, instead of trusting `is_available()` alone; and the torch
+  reinstall in "Prepare Environment" targets the `cu126` wheel index
+  specifically (`pip install --force-reinstall torch==<version>
+  --index-url https://download.pytorch.org/whl/cu126`), which still
+  covers Pascal alongside newer architectures, unlike `cu130`.
+- **Kaggle wipes `/kaggle/working/` on every kernel stop/restart** --
+  a checkpoint parquet from a finished (or partially finished)
+  transcription run doesn't survive on its own. The eval section's
+  checkpoint-loading cells check for a precomputed checkpoint attached as
+  a Kaggle Dataset Input before falling back to the normal resumable-load
+  logic, found by filename via a **recursive** glob
+  (`Path("/kaggle/input").glob("**/<filename>")`) -- this environment
+  nests attached inputs three levels deep
+  (`/kaggle/input/datasets/<user>/<slug>/...`), not the flat
+  `/kaggle/input/<slug>/...` some Kaggle docs assume (confirmed via
+  `find /kaggle/input -name "*.parquet"` against a real attached input).
 
 ## Deployment demo (`deploy/`)
 
@@ -258,8 +339,9 @@ functions, which all expect a file path, not raw bytes -- cleaned up in
 a `finally` block after each transcription.
 
 Both load `troxyz1268/whisper-small-bisaya` (the checkpoint
-`fine-tune-whisper-kaggle.ipynb` pushes to the Hub) from the Hub by
-default via `BISAYA_WHISPER_MODEL_ID` -- override for a different Hub
-repo or a local export. Both read a `.env` from their own directory
-first, falling back to `deploy/.env` if present (see `deploy/.env.example`
-for the full variable list, and `deploy/README.md` for setup).
+`finetune_whisper.ipynb` pushes to the Hub) from the Hub by default via
+`BISAYA_WHISPER_MODEL_ID` -- override for a different Hub repo or a local
+export. Both read the one shared `deploy/.env` (see `deploy/.env.example`
+for the full variable list, and `deploy/README.md` for setup) -- not a
+per-app `.env`, by deliberate choice, to avoid keeping two copies of the
+same secrets in sync.

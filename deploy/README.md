@@ -26,9 +26,10 @@ a PRO account for Gradio (and Docker) Spaces as of mid-2026, even on free
 CPU hardware; only Static Spaces stayed free. Streamlit Community Cloud
 is still free for public apps, so both apps here target that instead.
 
-Both are separate from the benchmark notebooks (`train_kaldi.ipynb`,
-`evaluate_*.ipynb`, `compare.ipynb`) -- these are for trying the models
-interactively, not for computing WER/CER.
+Both are separate from the benchmark notebooks under `notebooks/`
+(`train_kaldi.ipynb`, `evaluate_*.ipynb`, `finetune_whisper.ipynb`,
+`compare.ipynb`) -- these are for trying the models interactively, not
+for computing WER/CER.
 
 ## 0. Environment setup (do this first, for either app)
 
@@ -172,6 +173,8 @@ out of this repo first.
 - Each engine reports why it isn't usable in its own output box instead
   of crashing the app -- one engine failing never blocks the others in
   `local_app.py`.
-- Neither app is for benchmarking -- for WER/CER, use `evaluate_kaldi.ipynb`
-  / `evaluate_elevenlabs.ipynb` / `compare.ipynb` (and whatever notebook
-  currently scores Whisper -- check the repo root, this changed recently).
+- Neither app is for benchmarking -- for WER/CER, use
+  `notebooks/evaluate_kaldi.ipynb` / `notebooks/evaluate_elevenlabs.ipynb`
+  / `notebooks/finetune_whisper.ipynb` (its eval section, on Kaggle) /
+  `notebooks/compare.ipynb`, in that dependency order (see the repo
+  root's `README.md`).

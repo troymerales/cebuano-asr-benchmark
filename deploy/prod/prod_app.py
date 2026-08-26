@@ -15,7 +15,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 _here = Path(__file__).resolve().parent
-load_dotenv(_here / ".env")
 load_dotenv(_here.parent / ".env")  # deploy/.env, if this folder is run from within the full repo
 
 import streamlit as st
