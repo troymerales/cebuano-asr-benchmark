@@ -305,9 +305,11 @@ deploy/
     kaldi_infer.py         # live Kaldi decode for one audio file (needs WSL2/Ubuntu)
     whisper_infer.py       # Whisper inference (Hugging Face Hub checkpoint)
     elevenlabs_infer.py    # ElevenLabs Scribe API call
+    soap_infer.py           # real SOAP note via Gemini (needs GEMINI_API_KEY)
     requirements.txt
   prod/
     prod_app.py           # Whisper only, self-contained, cloud-ready
+    soap_infer.py           # placeholder -- never calls Gemini, see below
     requirements.txt
     README.md              # description shown on the deployed app
 ```
@@ -332,6 +334,31 @@ deploy/
   self-contained (no imports outside `deploy/prod/`) so the folder can
   be deployed as its own unit; the model is loaded once per server
   process via `@st.cache_resource`.
+
+**SOAP note generation** (`soap_infer.py`, one copy per app, same
+`generate_soap(transcript) -> dict` interface with `Subjective`/
+`Objective`/`Assessment`/`Plan` keys) sits on top of transcription in
+both apps -- rendered first, above the raw transcript(s). Requires:
+- `local_app.py`'s `soap_infer.py` actually calls the Gemini API
+  (`BISAYA_SOAP_MODEL_ID`, default `gemini-2.5-flash`), lazily importing
+  `google.genai` the same way `whisper_infer.py` lazily imports
+  `transformers`, gated behind `GEMINI_API_KEY`. It always generates from
+  **Whisper's** transcript specifically (this project's best free-tier
+  WER/CER), independent of the model-selection checklist -- if Whisper
+  wasn't checked, `local_app.py` transcribes with it anyway just to feed
+  SOAP generation, so unchecking Whisper only drops it from the
+  raw-transcript comparison at the bottom, not from the SOAP note.
+- `prod_app.py`'s `soap_infer.py` is a placeholder that **never** calls
+  Gemini -- `prod_app.py` gets anonymous public traffic, and a real call
+  per transcription would burn the deployer's API quota. It returns a
+  fixed explanatory string in all four sections instead. Both apps'
+  rendering code is otherwise identical, so a viewer moving between them
+  sees the same layout regardless of whether the SOAP content is real.
+
+When more than one engine is selected in `local_app.py`, their raw
+transcripts render side by side via `st.columns(len(selected_engines))`
+rather than stacked with `<br>` tags -- one column per checked engine, on
+one horizontal line.
 
 Both apps write uploaded/recorded audio (`st.file_uploader` +
 `st.audio_input`) to a temp file before passing it to the inference

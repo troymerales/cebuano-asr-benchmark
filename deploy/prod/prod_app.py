@@ -20,6 +20,8 @@ load_dotenv(_here.parent / ".env")  # deploy/.env, if this folder is run from wi
 import streamlit as st
 from transformers import pipeline
 
+import soap_infer
+
 MODEL_ID = os.environ.get("BISAYA_WHISPER_MODEL_ID", "troxyz1268/whisper-small-bisaya")
 LANGUAGE = "tl"  # matches training (Tagalog -- Whisper's closest code to Bisaya/Cebuano)
 
@@ -70,7 +72,31 @@ if st.button("Transcribe"):
         audio_path = _save_to_temp(audio_file)
         try:
             text = transcribe(audio_path)
-            st.text_area("Transcript", text, label_visibility="collapsed")
+
+            soap_sections = None
+            soap_error = None
+            try:
+                soap_sections = soap_infer.generate_soap(text)
+            except soap_infer.SoapUnavailableError as e:
+                soap_error = str(e)
+            except Exception as e:
+                soap_error = f"SOAP generation failed: {e}"
+
+            st.subheader("SOAP Note")
+            if soap_sections:
+                for section in soap_infer.SECTIONS:
+                    st.markdown(f"**{section}**")
+                    st.write(soap_sections.get(section) or "_(empty)_")
+            else:
+                st.info(soap_error or "SOAP note unavailable.")
+
+            # Single-column, but kept as a columns() layout (not a fixed
+            # box) so it matches local_app.py's side-by-side structure.
+            st.subheader("Raw transcription")
+            cols = st.columns(1)
+            with cols[0]:
+                st.markdown("**Whisper**")
+                st.text_area("Whisper_output", text, label_visibility="collapsed")
         except Exception as e:
             st.error(f"Error: {e}")
         finally:

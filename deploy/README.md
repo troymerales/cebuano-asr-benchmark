@@ -14,12 +14,18 @@ deploy/
     kaldi_infer.py     # live Kaldi decode for one audio file
     whisper_infer.py   # Whisper inference (Hugging Face Hub checkpoint)
     elevenlabs_infer.py # ElevenLabs Scribe API call
+    soap_infer.py       # generates a SOAP note from the Whisper transcript, via Gemini
     requirements.txt
   prod/
     prod_app.py        # Whisper only, self-contained, cloud-ready
+    soap_infer.py       # placeholder -- does NOT call Gemini, see "SOAP notes" below
     requirements.txt
     README.md           # description shown on the deployed app -- see "Publishing" below
 ```
+
+Both apps generate a **SOAP note** (Subjective/Objective/Assessment/Plan)
+from the transcript on top of transcribing the audio -- see "SOAP notes"
+further down for how that's split between the two apps.
 
 Built with Streamlit, not Gradio -- Hugging Face Spaces started requiring
 a PRO account for Gradio (and Docker) Spaces as of mid-2026, even on free
@@ -63,6 +69,10 @@ systems, but it needs real setup:
   for something else; the repo-root `packages.txt` handles this
   automatically when deployed to Streamlit Cloud, but a local WSL/Ubuntu
   install needs it added by hand.
+- **SOAP note** generation needs `GEMINI_API_KEY` in your `.env` -- see
+  "SOAP notes" below. Without it, the app still transcribes normally; the
+  SOAP section just shows "SOAP note unavailable" instead of failing the
+  whole page.
 
 **Run:**
 
@@ -86,6 +96,8 @@ automatically -- from WSL2, open it from Windows; WSL2 forwards
 | `BISAYA_KALDI_LMWT` | `13` | fixed LM weight for decoding |
 | `BISAYA_DEPLOY_WORK_DIR` | `~/bisaya_deploy_work` | scratch dir for the per-request Kaldi data/mfcc/decode dirs |
 | `ELEVENLABS_API_KEY` | *(required for ElevenLabs)* | ElevenLabs API key |
+| `GEMINI_API_KEY` | *(required for SOAP notes)* | Gemini API key, used to generate the SOAP note |
+| `BISAYA_SOAP_MODEL_ID` | `gemini-2.5-flash` | Gemini model used for SOAP generation |
 | `BISAYA_WHISPER_MODEL_ID` | `troxyz1268/whisper-small-bisaya` | Hub repo id or local path to the Whisper checkpoint |
 
 `BISAYA_DEPLOY_WORK_DIR` must be a WSL-native path (not under `/mnt/c/...`)
@@ -110,11 +122,12 @@ A lightweight, **Whisper-only** experience meant for standard cloud
 container environments (Streamlit Community Cloud, etc.) that can't
 build Kaldi or hold API secrets safely for public traffic. No engine
 picker, no Kaldi, no ElevenLabs -- just upload/record and get a
-transcript from the fine-tuned model.
+transcript from the fine-tuned model, plus a SOAP note (see "SOAP notes"
+below for why that note is a placeholder here, not a real Gemini call).
 
 Self-contained: `deploy/prod/` has everything it needs (`prod_app.py`,
-`requirements.txt`, `README.md`) to be deployed on its own, with one
-exception -- the `ffmpeg` system dependency (see the Whisper bullet
+`soap_infer.py`, `requirements.txt`, `README.md`) to be deployed on its
+own, with one exception -- the `ffmpeg` system dependency (see the Whisper bullet
 under `local_app.py` above for why) has to live in a `packages.txt` at
 the **repository root**, not next to `prod_app.py`; Streamlit Cloud
 doesn't currently search subdirectories for `packages.txt` the way it
@@ -167,6 +180,36 @@ out of this repo first.
    Community Cloud apps sleep after a period of inactivity and take a
    moment to wake on the next visit, on top of the model's own
    cold-start latency (see "Runs on CPU by default" above).
+
+## SOAP notes
+
+Both apps generate a SOAP note (Subjective/Objective/Assessment/Plan) for
+the transcribed conversation, shown above the raw transcript, via the
+Gemini API. Both call the same interface --
+`soap_infer.generate_soap(transcript) -> dict` with keys `Subjective`,
+`Objective`, `Assessment`, `Plan` -- but each app has its own
+`soap_infer.py`:
+
+- **`deploy/local/soap_infer.py`** actually calls Gemini
+  (`BISAYA_SOAP_MODEL_ID`, default `gemini-2.5-flash`), gated behind your
+  own `GEMINI_API_KEY`.
+- **`deploy/prod/soap_infer.py`** is a placeholder that never calls
+  Gemini at all -- `prod_app.py` gets anonymous public traffic, and a
+  real call per transcription would burn the deployer's API quota. It
+  returns a fixed explanatory message in each of the four sections
+  instead.
+
+The two apps' SOAP/transcript display code is otherwise identical (same
+section headers, same layout), so a viewer moving between the local and
+public demo sees the same UI either way -- only whether the SOAP content
+is real changes.
+
+In `local_app.py`, the SOAP note is generated from **Whisper's**
+transcript specifically -- this project's best free-tier WER/CER --
+regardless of which engines are checked in the model-selection checklist;
+if Whisper wasn't one of them, `local_app.py` transcribes with it anyway
+just to feed the SOAP note, so unchecking Whisper only removes it from
+the raw-transcript comparison, not from SOAP generation.
 
 ## Notes
 

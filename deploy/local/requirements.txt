@@ -3,3 +3,4 @@ transformers
 torch
 python-dotenv
 elevenlabs
+google-genai
