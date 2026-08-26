@@ -72,14 +72,16 @@ Kaggle's Output tab and drop into `output/whisper/results.csv` locally.
 
 ## Interactive demo (`deploy/`)
 
-Separate from the notebooks above -- two Gradio apps for trying the
+Separate from the notebooks above -- two Streamlit apps for trying the
 systems interactively rather than computing WER/CER, split by audience
-and environment (see `deploy/README.md` for full setup):
+and environment (see `deploy/README.md` for full setup). Built with
+Streamlit rather than Gradio since Hugging Face Spaces now requires a
+PRO account for Gradio Spaces -- Streamlit Community Cloud is still free.
 
 | | `deploy/local/local_app.py` | `deploy/prod/prod_app.py` |
 |---|---|---|
 | Systems | Kaldi + ElevenLabs + Whisper (checklist, any combination) | Whisper only |
-| Environment | **WSL2/Ubuntu**, built Kaldi checkout, `models/tri3/`, `ELEVENLABS_API_KEY` | Any lightweight cloud container (Hugging Face Spaces, Streamlit Community Cloud) or plain Python |
+| Environment | **WSL2/Ubuntu**, built Kaldi checkout, `models/tri3/`, `ELEVENLABS_API_KEY` | Any lightweight cloud container (Streamlit Community Cloud) or plain Python |
 | Audience | Advanced users with the full local setup | Public-facing showcase |
 
 `prod_app.py` drops Kaldi entirely -- it needs a compiled Kaldi checkout

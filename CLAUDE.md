@@ -206,10 +206,14 @@ wired into the two-system benchmark's WER/CER comparison).
 
 ## Deployment demo (`deploy/`)
 
-Two standalone Gradio UIs for trying the ASR systems interactively --
+Two standalone Streamlit UIs for trying the ASR systems interactively --
 separate from the benchmark notebooks above, not for computing WER/CER
-(see `deploy/README.md` for full setup/run instructions). Split into two
-apps because they target different audiences and environments:
+(see `deploy/README.md` for full setup/run instructions). Built with
+Streamlit rather than Gradio: Hugging Face Spaces started requiring a
+PRO account for Gradio (and Docker) Spaces as of mid-2026, even on free
+CPU hardware, so both apps target Streamlit Community Cloud instead,
+which is still free for public apps. Split into two apps because they
+target different audiences and environments:
 
 ```
 deploy/
@@ -224,25 +228,34 @@ deploy/
   prod/
     prod_app.py           # Whisper only, self-contained, cloud-ready
     requirements.txt
+    README.md              # description shown on the deployed app
 ```
 
 - **`local_app.py`** -- for advanced users with the full local
   environment set up (WSL2/Ubuntu + built Kaldi checkout + exported
   `models/tri3/` for Kaldi, an `ELEVENLABS_API_KEY` for ElevenLabs).
-  Model selection is a `gr.CheckboxGroup` (Kaldi/ElevenLabs/Whisper, all
-  checked by default) -- transcript boxes are shown/hidden to match
-  exactly what's checked, since this is an experiment comparing systems,
-  not a product that picks one. Each engine's failure is caught and
-  shown in its own output box rather than blocking the others; an
-  ElevenLabs 401/429 (out of API credits) is specifically caught as
-  `elevenlabs_infer.QuotaExceededError` and surfaced as a prominent
-  warning banner across the top instead of a generic per-box error.
+  Model selection is a `st.multiselect` (Kaldi/ElevenLabs/Whisper, all
+  checked by default) -- transcript boxes are rendered only for what's
+  checked, since this is an experiment comparing systems, not a product
+  that picks one. Each engine's failure is caught and shown in its own
+  output box rather than blocking the others; an ElevenLabs 401/429 (out
+  of API credits, or an account flagged for unusual activity) is
+  specifically caught as `elevenlabs_infer.QuotaExceededError` and
+  surfaced via a `st.empty()` placeholder reserved at the top of the
+  page, so the warning renders above the results regardless of when in
+  the script it's actually set.
 - **`prod_app.py`** -- Whisper-only, no engine picker, meant for
-  lightweight cloud hosting (Hugging Face Spaces, Streamlit Community
-  Cloud). Kaldi is omitted entirely: it needs a compiled Kaldi checkout
-  under WSL/C++, which standard cloud containers can't provide. Written
-  to be self-contained (no imports outside `deploy/prod/`) so the folder
-  can be pushed as its own deployment unit.
+  lightweight cloud hosting (Streamlit Community Cloud). Kaldi is
+  omitted entirely: it needs a compiled Kaldi checkout under WSL/C++,
+  which standard cloud containers can't provide. Written to be
+  self-contained (no imports outside `deploy/prod/`) so the folder can
+  be deployed as its own unit; the model is loaded once per server
+  process via `@st.cache_resource`.
+
+Both apps write uploaded/recorded audio (`st.file_uploader` +
+`st.audio_input`) to a temp file before passing it to the inference
+functions, which all expect a file path, not raw bytes -- cleaned up in
+a `finally` block after each transcription.
 
 Both load `troxyz1268/whisper-small-bisaya` (the checkpoint
 `fine-tune-whisper-kaggle.ipynb` pushes to the Hub) from the Hub by

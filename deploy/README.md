@@ -1,6 +1,6 @@
 # Deployment
 
-Two separate Gradio apps, for two separate audiences:
+Two separate Streamlit apps, for two separate audiences:
 
 ```
 deploy/
@@ -15,8 +15,13 @@ deploy/
   prod/
     prod_app.py        # Whisper only, self-contained, cloud-ready
     requirements.txt
-    README.md           # Hugging Face Spaces config (SDK, app file) -- see "Publishing" below
+    README.md           # description shown on the deployed app -- see "Publishing" below
 ```
+
+Built with Streamlit, not Gradio -- Hugging Face Spaces started requiring
+a PRO account for Gradio (and Docker) Spaces as of mid-2026, even on free
+CPU hardware; only Static Spaces stayed free. Streamlit Community Cloud
+is still free for public apps, so both apps here target that instead.
 
 Both are separate from the benchmark notebooks (`train_kaldi.ipynb`,
 `evaluate_*.ipynb`, `compare.ipynb`) -- these are for trying the models
@@ -56,11 +61,12 @@ systems, but it needs real setup:
 source ~/asr-venv/bin/activate   # same venv train_kaldi.ipynb uses is fine
 pip install -r deploy/local/requirements.txt
 cd deploy/local
-python local_app.py
+streamlit run local_app.py
 ```
 
-Gradio prints a local URL (`http://127.0.0.1:7860`) -- open it from
-Windows; WSL2 forwards `localhost` automatically.
+Streamlit prints a local URL (`http://localhost:8501`) and opens it
+automatically -- from WSL2, open it from Windows; WSL2 forwards
+`localhost` automatically.
 
 **Config (env vars, all optional except `ELEVENLABS_API_KEY`):**
 
@@ -92,13 +98,13 @@ off, try a different value (the eval notebook's sweep covers 1-25).
 ## 2. `prod_app.py` -- for cloud hosting
 
 A lightweight, **Whisper-only** experience meant for standard cloud
-container environments (Hugging Face Spaces, Streamlit Community Cloud,
-etc.) that can't build Kaldi or hold API secrets safely for public
-traffic. No engine picker, no Kaldi, no ElevenLabs -- just upload/record
-and get a transcript from the fine-tuned model.
+container environments (Streamlit Community Cloud, etc.) that can't
+build Kaldi or hold API secrets safely for public traffic. No engine
+picker, no Kaldi, no ElevenLabs -- just upload/record and get a
+transcript from the fine-tuned model.
 
-Self-contained: `deploy/prod/` has everything it needs (`prod_app.py` +
-`requirements.txt`) to be pushed as its own deployment unit, with no
+Self-contained: `deploy/prod/` has everything it needs (`prod_app.py`,
+`requirements.txt`, `README.md`) to be deployed as its own unit, with no
 dependency on the rest of this repo.
 
 **Run:**
@@ -106,7 +112,7 @@ dependency on the rest of this repo.
 ```bash
 pip install -r deploy/prod/requirements.txt
 cd deploy/prod
-python prod_app.py
+streamlit run prod_app.py
 ```
 
 **Config (env var, optional):**
@@ -117,47 +123,34 @@ python prod_app.py
 
 Runs on CPU by default (no GPU logic here) -- fine for a free-tier
 showcase, just expect real per-request latency, especially cold-start on
-first use.
+first use. The model is loaded once per server process via
+`@st.cache_resource`, not reloaded on every request.
 
-## 3. Publishing `prod_app.py` to Hugging Face Spaces
+## 3. Publishing `prod_app.py` to Streamlit Community Cloud
 
-`deploy/prod/` is self-contained (`prod_app.py`, `requirements.txt`,
-`README.md`) specifically so it can be pushed as its own Space with no
-dependency on the rest of this repo.
+Unlike Hugging Face Spaces, Streamlit Community Cloud deploys straight
+from a GitHub repo -- no separate git remote, no copying `deploy/prod/`
+out of this repo first.
 
-1. Create a Space at [huggingface.co/new-space](https://huggingface.co/new-space)
-   -- SDK: **Gradio**, Hardware: **CPU basic** (free), Visibility: **Public**.
-2. `deploy/prod/README.md` already has the required Spaces config
-   frontmatter (`sdk: gradio`, `app_file: prod_app.py`, etc.) -- no need
-   to write a new one.
-3. No secrets/variables needed for the default setup: `prod_app.py` falls
-   back to `troxyz1268/whisper-small-bisaya` when `BISAYA_WHISPER_MODEL_ID`
-   isn't set, and no `.env` file gets pushed (it's gitignored) -- it just
-   works. Only set `BISAYA_WHISPER_MODEL_ID` as a Space "Variable" (in its
-   Settings) if you want a different checkpoint.
-4. Push the three files in `deploy/prod/` to the Space:
-   - **Simplest (no git):** open the Space's "Files" tab in the browser
-     and upload `prod_app.py`, `requirements.txt`, and `README.md`
-     directly. HF auto-builds and deploys on upload.
-   - **Via git** (better for iterating later) -- do this from a *copy* of
-     `deploy/prod/`, not the folder itself, since it's nested inside this
-     repo's own git tracking and a second `.git` folder in there would be
-     confusing:
-     ```bash
-     cp -r deploy/prod /tmp/bisaya-asr-space
-     cd /tmp/bisaya-asr-space
-     git init
-     git add .
-     git commit -m "Initial prod deploy"
-     git remote add space https://huggingface.co/spaces/<your-username>/<space-name>
-     git push space main
-     ```
-5. Once it builds, the Space is live at
-   `https://huggingface.co/spaces/<your-username>/<space-name>` -- public,
-   independent of your machine being on. Free CPU-basic Spaces sleep after
-   a period of inactivity and take a moment to wake on the next visit, on
-   top of the model's own cold-start latency (see "Runs on CPU by
-   default" above).
+1. Push this repo to GitHub (already done -- `origin` is
+   `github.com/troymerales/cebuano-asr-benchmark`).
+2. Go to [share.streamlit.io](https://share.streamlit.io), sign in with
+   GitHub, and click **New app**.
+3. Pick this repo and branch, and set the main file path to
+   `deploy/prod/prod_app.py`. Streamlit Cloud looks for `requirements.txt`
+   in the same directory as the main file, so `deploy/prod/requirements.txt`
+   is picked up automatically -- no extra config needed.
+4. No secrets needed for the default setup: `prod_app.py` falls back to
+   `troxyz1268/whisper-small-bisaya` when `BISAYA_WHISPER_MODEL_ID` isn't
+   set, and no `.env` file gets pushed (it's gitignored) -- it just works.
+   Only add `BISAYA_WHISPER_MODEL_ID` under the app's **Settings > Secrets**
+   (TOML format: `BISAYA_WHISPER_MODEL_ID = "..."`) if you want a
+   different checkpoint.
+5. Click **Deploy**. Once it builds, the app is live at a public
+   `*.streamlit.app` URL -- independent of your machine being on. Free
+   Community Cloud apps sleep after a period of inactivity and take a
+   moment to wake on the next visit, on top of the model's own
+   cold-start latency (see "Runs on CPU by default" above).
 
 ## Notes
 
