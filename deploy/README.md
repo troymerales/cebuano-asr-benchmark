@@ -3,6 +3,9 @@
 Two separate Streamlit apps, for two separate audiences:
 
 ```
+packages.txt          # repo root -- ffmpeg, needed by both apps' Whisper engine
+                       # (Streamlit Cloud only reads packages.txt from the repo root,
+                       # unlike requirements.txt which it finds next to the entrypoint)
 deploy/
   README.md
   .env.example       # copy into deploy/local/.env and/or deploy/prod/.env
@@ -56,9 +59,9 @@ systems, but it needs real setup:
   use, plus **`ffmpeg`** on `PATH` (`apt-get install ffmpeg`) -- the
   transformers pipeline shells out to it to decode the uploaded/recorded
   audio file. Easy to miss locally if it's already installed system-wide
-  for something else; `packages.txt` handles this automatically when
-  deployed to Streamlit Cloud, but a local WSL/Ubuntu install needs it
-  added by hand.
+  for something else; the repo-root `packages.txt` handles this
+  automatically when deployed to Streamlit Cloud, but a local WSL/Ubuntu
+  install needs it added by hand.
 
 **Run:**
 
@@ -109,12 +112,15 @@ picker, no Kaldi, no ElevenLabs -- just upload/record and get a
 transcript from the fine-tuned model.
 
 Self-contained: `deploy/prod/` has everything it needs (`prod_app.py`,
-`requirements.txt`, `packages.txt`, `README.md`) to be deployed as its
-own unit, with no dependency on the rest of this repo. `packages.txt`
-lists `ffmpeg` as a system dependency -- the transformers pipeline
-shells out to it to decode uploaded/recorded audio, and Streamlit Cloud
-installs everything in `packages.txt` via `apt-get` before running the
-app.
+`requirements.txt`, `README.md`) to be deployed on its own, with one
+exception -- the `ffmpeg` system dependency (see the Whisper bullet
+under `local_app.py` above for why) has to live in a `packages.txt` at
+the **repository root**, not next to `prod_app.py`; Streamlit Cloud
+doesn't currently search subdirectories for `packages.txt` the way it
+does for `requirements.txt`. This only matters if you deploy straight
+from this repo (see "Publishing" below) -- if you ever copy
+`deploy/prod/` out as its own separate repo, add a `packages.txt` with
+`ffmpeg` at that new repo's root too.
 
 **Run:**
 
