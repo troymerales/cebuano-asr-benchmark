@@ -7,6 +7,12 @@ model fine-tuned on this corpus (on Kaggle). The five notebooks under
 `notebooks/` don't run from one shared environment or in a single "run
 all" pass -- see "Running the pipeline" below for what to run where.
 
+**[Live demo →](https://cebuano-asr-benchmark-u4pxbbe9xhuq3gdhnup2tj.streamlit.app/)**
+-- a minimal Streamlit app serving just the fine-tuned Whisper checkpoint,
+deployed to Streamlit Community Cloud (see `deploy/README.md`). It's a
+quick way to try a recording, not the benchmark itself -- the actual
+training, evaluation, and three-way comparison live in `notebooks/`.
+
 ## Repository structure
 
 ```
