@@ -7,6 +7,10 @@ model fine-tuned on this corpus (on Kaggle). The five notebooks under
 `notebooks/` don't run from one shared environment or in a single "run
 all" pass -- see "Running the pipeline" below for what to run where.
 
+To see live demo (only fine-tuned Whisper): check out https://cebuano-asr-benchmark-u4pxbbe9xhuq3gdhnup2tj.streamlit.app/
+
+To see all models (Kaldi and ElevenLabs included): read deploy/README.md
+
 ## Repository structure
 
 ```
