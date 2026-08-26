@@ -51,9 +51,14 @@ systems, but it needs real setup:
   a prominent warning banner ("ElevenLabs transcription failed: Token
   quota exceeded...") instead of a generic error -- the other two engines
   keep working regardless.
-- **Whisper** just needs internet access to pull
+- **Whisper** needs internet access to pull
   `troxyz1268/whisper-small-bisaya` from the Hugging Face Hub on first
-  use -- no extra setup.
+  use, plus **`ffmpeg`** on `PATH` (`apt-get install ffmpeg`) -- the
+  transformers pipeline shells out to it to decode the uploaded/recorded
+  audio file. Easy to miss locally if it's already installed system-wide
+  for something else; `packages.txt` handles this automatically when
+  deployed to Streamlit Cloud, but a local WSL/Ubuntu install needs it
+  added by hand.
 
 **Run:**
 
@@ -104,8 +109,12 @@ picker, no Kaldi, no ElevenLabs -- just upload/record and get a
 transcript from the fine-tuned model.
 
 Self-contained: `deploy/prod/` has everything it needs (`prod_app.py`,
-`requirements.txt`, `README.md`) to be deployed as its own unit, with no
-dependency on the rest of this repo.
+`requirements.txt`, `packages.txt`, `README.md`) to be deployed as its
+own unit, with no dependency on the rest of this repo. `packages.txt`
+lists `ffmpeg` as a system dependency -- the transformers pipeline
+shells out to it to decode uploaded/recorded audio, and Streamlit Cloud
+installs everything in `packages.txt` via `apt-get` before running the
+app.
 
 **Run:**
 
